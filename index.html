@@ -613,6 +613,25 @@
 
     <!-- VIDEO TEST -->
     <section class="video" id="test" aria-label="YouTube test">
+      <section class="card" id="abtest" style="margin-top:18px;">
+  <h3>🎧 A/B Test — Hear the Difference</h3>
+  <p class="muted">Toggle between original CS2 sound and compressed preset.</p>
+
+  <div style="display:flex; gap:12px; align-items:center; margin-top:14px; flex-wrap:wrap;">
+    <button class="btn btnPrimary" id="playDemo">Play</button>
+
+    <div style="display:flex; border:1px solid var(--border); border-radius:12px; overflow:hidden;">
+      <button class="btn" id="btnOriginal">Original</button>
+      <button class="btn" id="btnCompressed">Compressed</button>
+    </div>
+
+    <span class="miniNote muted">Use headphones. Keep volume constant.</span>
+  </div>
+
+  <audio id="audioOriginal" src="./cs2_original.mp3"></audio>
+  <audio id="audioCompressed" src="./cs2_compressed.mp3"></audio>
+</section>
+
       <iframe src="https://www.youtube.com/embed/UHwiME-LhSE?rel=0"
               title="CS2 Audio Fix — Test APO ON/OFF"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -621,6 +640,60 @@
 
     <footer>by Zevzec</footer>
   </div>
+// --- A/B AUDIO DEMO ---
+
+const playBtn = document.getElementById('playDemo');
+const btnOrig = document.getElementById('btnOriginal');
+const btnComp = document.getElementById('btnCompressed');
+
+const audioOrig = document.getElementById('audioOriginal');
+const audioComp = document.getElementById('audioCompressed');
+
+let playing = false;
+let mode = "original";
+
+// preload
+audioOrig.preload = "auto";
+audioComp.preload = "auto";
+
+function syncTime(from, to){
+  to.currentTime = from.currentTime;
+}
+
+playBtn.addEventListener('click', () => {
+  if(!playing){
+    if(mode === "original"){
+      audioOrig.play();
+    }else{
+      audioComp.play();
+    }
+    playBtn.textContent = "Pause";
+    playing = true;
+  }else{
+    audioOrig.pause();
+    audioComp.pause();
+    playBtn.textContent = "Play";
+    playing = false;
+  }
+});
+
+btnOrig.addEventListener('click', () => {
+  if(mode === "original") return;
+
+  syncTime(audioComp, audioOrig);
+  audioComp.pause();
+  if(playing) audioOrig.play();
+  mode = "original";
+});
+
+btnComp.addEventListener('click', () => {
+  if(mode === "compressed") return;
+
+  syncTime(audioOrig, audioComp);
+  audioOrig.pause();
+  if(playing) audioComp.play();
+  mode = "compressed";
+});
 
   <script>
     const btnRO = document.getElementById('btnRO');
