@@ -344,28 +344,54 @@
       display:block;
     }
 
-    /* Footer */
-.footerZ{
-  margin-top:28px;
-  text-align:center;
-  color:rgba(234,240,255,.55);
-  font-size:12.5px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:10px;
-}
-
-.footerZ img{
-  width:123px;
-  height:auto;
-  opacity:.9;
-  filter: drop-shadow(0 6px 18px rgba(0,0,0,.6));
-}
-
     /* Language blocks */
     [data-lang]{ display:none; }
     [data-lang].show{ display:block; }
+  
+    /* Footer (with logos) */
+    .footerZ{
+      margin-top:28px;
+      text-align:center;
+      color:rgba(234,240,255,.55);
+      font-size:12.5px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+    }
+
+    .footerLogos{
+      display:flex;
+      gap:18px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    .footerLogos img{
+      width:234px;
+      height:auto;
+      opacity:.92;
+      transition: transform .18s ease, filter .18s ease, opacity .18s ease;
+      filter: drop-shadow(0 6px 18px rgba(0,0,0,.6));
+    }
+
+    .footerLogos a:hover img{
+      transform: translateY(-3px) scale(1.03);
+      filter: drop-shadow(0 10px 26px rgba(61,255,117,.35));
+    }
+
+    /* Breathing glow when slider is on Compressed mode */
+    @keyframes breatheGlow {
+      0%   { filter: drop-shadow(0 6px 18px rgba(0,0,0,.6)) drop-shadow(0 0 0 rgba(61,255,117,0)); opacity:.90; }
+      50%  { filter: drop-shadow(0 6px 18px rgba(0,0,0,.6)) drop-shadow(0 0 26px rgba(61,255,117,.35)); opacity:1; }
+      100% { filter: drop-shadow(0 6px 18px rgba(0,0,0,.6)) drop-shadow(0 0 0 rgba(61,255,117,0)); opacity:.90; }
+    }
+
+    body.compressedMode .footerLogos img{
+      animation: breatheGlow 2.2s ease-in-out infinite;
+    }
+
   </style>
 </head>
 
@@ -589,10 +615,17 @@
               allowfullscreen></iframe>
     </section>
 
-<footer class="footerZ">
-  <div>by Zevzec</div>
-  <img src="./logo.png" alt="Zevzec logo">
-</footer>
+    <footer class="footerZ">
+      <div>by Zevzec</div>
+
+      <div class="footerLogos">
+        <img src="./logo2.png" alt="logo2">
+
+        <a href="https://steamcommunity.com/groups/BucLLgRo" target="_blank" rel="noopener">
+          <img src="./logo.png" alt="Zevzec Steam group">
+        </a>
+      </div>
+    </footer>
   </div>
 
   <script>
@@ -667,6 +700,7 @@
       const compressedOn = v >= 0.5;
       led.classList.toggle('on', compressedOn);
       modeLabel.textContent = compressedOn ? 'Compressed' : 'Original';
+      document.body.classList.toggle('compressedMode', compressedOn);
     }
 
     function setMix(){
