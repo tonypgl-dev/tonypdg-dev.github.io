@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CS2 Audio Fix — by Zevzec</title>
+  <meta name="description" content="CS2: compressor + EQ guide for clearer footsteps and softer explosions (Equalizer APO + Peace + ReaComp)." />
+  <link rel="preconnect" href="https://www.youtube.com" />
+  <link rel="preconnect" href="https://i.ytimg.com" />
+  <style>
+    /* identical CSS as RO page (keep it consistent) */
+    :root{--bg:#0b0f14;--panel:#101826;--panel2:#0f1724;--text:#e6edf3;--muted:#9aa4b2;--border:rgba(255,255,255,.08);--green:#4cff7a;--red:#ff3b3b;--shadow:0 10px 30px rgba(0,0,0,.35);--radius:16px;--max:1100px;--mono:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;--sans:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,"Apple Color Emoji","Segoe UI Emoji"}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:var(--sans);background:radial-gradient(1200px 800px at 60% 0%, rgba(255,59,59,.10), transparent 60%),radial-gradient(900px 600px at 20% 20%, rgba(76,255,122,.10), transparent 55%),var(--bg);color:var(--text)}
+    a{color:var(--green);text-decoration:none}a:hover{opacity:.9;text-decoration:underline}
+    .wrap{max-width:var(--max);margin:0 auto;padding:24px}
+    .hero{position:relative;border:1px solid var(--border);border-radius:calc(var(--radius) + 6px);overflow:hidden;box-shadow:var(--shadow);background:#070a0f;min-height:380px}
+    .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(110deg, rgba(11,15,20,.95) 0%, rgba(11,15,20,.70) 40%, rgba(11,15,20,.90) 100%),url("assets/hero.png") center/cover no-repeat;filter:saturate(1.05) contrast(1.05)}
+    .hero::after{content:"";position:absolute;inset:0;background:radial-gradient(900px 450px at 70% 20%, rgba(76,255,122,.16), transparent 60%),radial-gradient(800px 420px at 20% 30%, rgba(255,59,59,.18), transparent 60%);pointer-events:none;mix-blend-mode:screen;opacity:.8}
+    .heroInner{position:relative;padding:28px;display:flex;gap:24px;align-items:flex-end;justify-content:space-between;min-height:380px}
+    .topbar{position:absolute;top:18px;left:18px;right:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .lang{display:flex;gap:10px;align-items:center;font-size:14px;background:rgba(16,24,38,.65);border:1px solid var(--border);padding:8px 10px;border-radius:999px;backdrop-filter:blur(10px)}
+    .lang a{color:var(--muted);font-weight:600;padding:4px 8px;border-radius:999px}
+    .lang a.active{color:var(--text);background:rgba(255,255,255,.06)}
+    .badge{display:inline-flex;align-items:center;gap:10px;padding:8px 12px;border-radius:999px;border:1px solid var(--border);background:rgba(16,24,38,.70);backdrop-filter:blur(10px);font-weight:700;letter-spacing:.2px}
+    .badge b{color:var(--green)}.badge img{height:18px;width:auto;filter:drop-shadow(0 6px 16px rgba(0,0,0,.6))}
+    h1{margin:0 0 10px 0;font-size:clamp(28px,4vw,44px);line-height:1.05;letter-spacing:-.5px}
+    .sub{margin:0 0 16px 0;max-width:62ch;color:var(--muted);font-size:16px;line-height:1.5}
+    .ctaRow{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:10px;border-radius:12px;padding:12px 14px;border:1px solid var(--border);background:rgba(16,24,38,.70);color:var(--text);font-weight:800;letter-spacing:.15px;box-shadow:0 10px 18px rgba(0,0,0,.25)}
+    .btn.primary{background:linear-gradient(135deg, rgba(76,255,122,.20), rgba(76,255,122,.10));border-color:rgba(76,255,122,.35)}
+    .btn.red{background:linear-gradient(135deg, rgba(255,59,59,.20), rgba(255,59,59,.10));border-color:rgba(255,59,59,.35)}
+    .btn:hover{transform:translateY(-1px)}.btn:active{transform:translateY(0px)}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:16px;margin-top:18px}
+    .card{border:1px solid var(--border);border-radius:var(--radius);background:rgba(16,24,38,.55);backdrop-filter:blur(10px);box-shadow:0 10px 26px rgba(0,0,0,.22);overflow:hidden}
+    .card .hd{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(15,23,36,.65)}
+    .card .hd h2{margin:0;font-size:14px;letter-spacing:.25px;text-transform:uppercase;color:var(--muted)}
+    .card .bd{padding:16px}
+    .kpis{grid-column:span 12}
+    .kpiRow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+    .kpi{border:1px solid var(--border);border-radius:14px;padding:12px;background:rgba(11,15,20,.35)}
+    .kpi .t{font-weight:900}.kpi .d{color:var(--muted);font-size:13px;margin-top:6px;line-height:1.35}
+    .warn{border-color:rgba(255,59,59,.30);background:linear-gradient(135deg, rgba(255,59,59,.10), rgba(16,24,38,.55))}
+    .warn .hd{border-bottom-color:rgba(255,59,59,.22)}
+    .actions{margin:0;padding-left:18px;line-height:1.55}
+    .actions li{margin:6px 0}.actions li b{color:var(--green)}
+    .muted{color:var(--muted)}.mono{font-family:var(--mono)}
+    .hr{height:1px;background:var(--border);margin:18px 0}
+    table{width:100%;border-collapse:collapse;font-size:14px;overflow:hidden;border-radius:14px;border:1px solid var(--border);background:rgba(11,15,20,.30)}
+    th,td{padding:10px;border-bottom:1px solid var(--border);vertical-align:top}
+    th{text-align:left;color:var(--muted);font-size:12px;letter-spacing:.3px;text-transform:uppercase;background:rgba(15,23,36,.70)}
+    tr:last-child td{border-bottom:none}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--border);border-radius:999px;background:rgba(16,24,38,.55);font-weight:800;font-size:13px}
+    .pill.green{border-color:rgba(76,255,122,.35)}.pill.red{border-color:rgba(255,59,59,.35)}
+    .small{font-size:13px;line-height:1.45}
+    .step{display:flex;gap:12px;align-items:flex-start;border:1px solid var(--border);border-radius:14px;padding:14px;background:rgba(11,15,20,.25);margin:10px 0}
+    .num{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;font-weight:1000;background:rgba(76,255,122,.12);border:1px solid rgba(76,255,122,.25);color:var(--text);flex:0 0 auto}
+    .step h3{margin:0 0 8px 0;font-size:16px}
+    .yt{position:relative;padding-top:56.25%;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:rgba(0,0,0,.25)}
+    .yt iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+    footer{margin:22px 0 10px 0;text-align:center;color:rgba(230,237,243,.65);font-weight:700;letter-spacing:.2px}
+    @media (max-width:860px){.heroInner{flex-direction:column;align-items:flex-start}.kpiRow{grid-template-columns:1fr}}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="topbar">
+        <span class="badge">
+          <img src="assets/cs2.svg" alt="CS2" />
+          <span><b>Optimized</b> for CS2</span>
+        </span>
+        <nav class="lang" aria-label="Language">
+          <a href="index.html">RO</a>
+          <a class="active" href="en.html">EN</a>
+        </nav>
+      </div>
+
+      <div class="heroInner">
+        <div>
+          <h1>CS2 Audio Fix</h1>
+          <p class="sub">
+            Quick guide for <b>clearer footsteps</b> and <b>softer explosions/guns</b> using Equalizer APO + Peace + ReaComp.
+          </p>
+          <div class="ctaRow">
+            <a class="btn primary" href="#start">▶ Start setup</a>
+            <a class="btn" href="#downloads">⬇ Download links</a>
+            <a class="btn red" href="#test">🎧 APO ON/OFF test</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card kpis">
+        <div class="hd"><h2>What it does</h2><span class="pill green">CS2 only</span></div>
+        <div class="bd">
+          <div class="kpiRow">
+            <div class="kpi"><div class="t">🔊 Limits peaks</div><div class="d">Guns/flash/explosions stop being painful.</div></div>
+            <div class="kpi"><div class="t">👟 Brings footsteps forward</div><div class="d">Highlights useful detail for competitive play.</div></div>
+            <div class="kpi"><div class="t">🛡️ Not a cheat</div><div class="d">No game modifications, Windows-level audio processing.</div></div>
+          </div>
+          <p class="small muted" style="margin-top:12px"><b>Dynamic range compression</b> at Windows level.</p>
+        </div>
+      </section>
+
+      <section class="card warn" style="grid-column: span 12;">
+        <div class="hd"><h2>Before you start</h2><span class="pill red">Do this first</span></div>
+        <div class="bd">
+          <ul class="actions">
+            <li><b>Uninstall</b> SteelSeries Sonar / Voicemeeter / Virtual Audio Cable</li>
+            <li><b>Restart PC</b></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="downloads" style="grid-column: span 12;">
+        <div class="hd"><h2>Download links</h2><span class="pill">Tools</span></div>
+        <div class="bd">
+          <table>
+            <thead><tr><th>Tool</th><th>Link</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><b>Equalizer APO</b></td><td><a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo/</a></td><td>Run installer as admin</td></tr>
+              <tr><td><b>Peace</b></td><td><a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension/</a></td><td>Choose <b>Full Interface</b></td></tr>
+              <tr><td><b>ReaPlugs</b></td><td><a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs/</a></td><td>Install 64-bit (default)</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" id="start" style="grid-column: span 12;">
+        <div class="hd"><h2>Steps</h2><span class="pill green">Green = actions</span></div>
+        <div class="bd">
+          <div class="step"><div class="num">1</div><div><h3>Install Equalizer APO</h3>
+            <ul class="actions">
+              <li><b>Download</b>: <span class="mono">https://sourceforge.net/projects/equalizerapo/</span></li>
+              <li><b>Right click</b> → <b>Run as administrator</b></li>
+              <li>Select <b>only your real headset/speakers</b> (USB Headset / Realtek Speakers)</li>
+              <li>Do <b>not</b> select monitor / HDMI / NVIDIA / Sonar / virtual devices</li>
+              <li><b>Finish → Restart PC</b></li>
+            </ul>
+          </div></div>
+
+          <div class="step"><div class="num">2</div><div><h3>Install Peace</h3>
+            <ul class="actions">
+              <li><b>Download</b>: <span class="mono">https://sourceforge.net/projects/peace-equalizer-apo-extension/</span></li>
+              <li>Choose <b>Full Interface</b></li>
+              <li><b>Open Peace</b></li>
+            </ul>
+          </div></div>
+
+          <div class="step"><div class="num">3</div><div><h3>Install ReaPlugs</h3>
+            <ul class="actions">
+              <li><b>Download</b>: <span class="mono">https://www.reaper.fm/reaplugs/</span></li>
+              <li>Install <b>ReaPlugs VST 64-bit</b> with defaults</li>
+            </ul>
+          </div></div>
+
+          <div class="step"><div class="num">4</div><div><h3>Open the VST Editor and set the chain</h3>
+            <ul class="actions">
+              <li>Peace → <b>Commands</b> → <b>Use Editor (VST)</b></li>
+              <li>Tab: <b>Before Peace EQ</b></li>
+              <li>If you see <span class="mono">config.txt</span>, <b>delete that tab</b></li>
+            </ul>
+            <p class="small muted" style="margin:8px 0 0 0;">Recommended chain: Preamp → ReaComp → Graphic EQ</p>
+          </div></div>
+
+          <div class="step"><div class="num">5</div><div><h3>GAIN before the compressor</h3>
+            <ul class="actions">
+              <li>Press <b>+</b> → <b>Basic Filters</b> → <b>Preamp</b></li>
+              <li>Set <b>-7.00 dB</b></li>
+            </ul>
+          </div></div>
+
+          <div class="step"><div class="num">6</div><div><h3>Add ReaComp (VST)</h3>
+            <ul class="actions">
+              <li>Press <b>+</b> → <b>Plugins</b> → <b>VST plugin</b></li>
+              <li>Select <span class="mono">reacomp-standalone.dll</span> (ReaPlugs)</li>
+              <li>Click <b>Open panel</b></li>
+            </ul>
+          </div></div>
+
+          <div class="step"><div class="num">7</div><div><h3>Save</h3>
+            <ul class="actions"><li><b>Ctrl + S</b> in the Configuration Editor</li></ul>
+          </div></div>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column: span 12;">
+        <div class="hd"><h2>ReaComp settings</h2><span class="pill">Compressor</span></div>
+        <div class="bd">
+          <table>
+            <thead><tr><th>Parameter</th><th>Value</th><th>Notes</th></tr></thead>
+            <tbody>
+              <tr><td><b>Threshold</b></td><td class="mono">-30 dB</td><td>Catches peaks</td></tr>
+              <tr><td><b>Ratio</b></td><td class="mono">4:1</td><td>Safe compression</td></tr>
+              <tr><td><b>Attack</b></td><td class="mono">3 ms</td><td>Fast peak control</td></tr>
+              <tr><td><b>Release</b></td><td class="mono">150 ms</td><td>Natural recovery</td></tr>
+              <tr><td><b>Knee</b></td><td class="mono">3 dB</td><td>Smoother</td></tr>
+              <tr><td><b>Classic attack</b></td><td class="mono">ON</td><td></td></tr>
+              <tr><td><b>Auto make-up</b></td><td class="mono">OFF</td><td></td></tr>
+              <tr><td><b>Wet</b></td><td class="mono">+6 dB</td><td>Regain level</td></tr>
+              <tr><td><b>Dry</b></td><td class="mono">-inf</td><td>Processed only</td></tr>
+              <tr><td><b>Limit output</b></td><td class="mono">ON</td><td>Avoid clipping</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column: span 12;">
+        <div class="hd"><h2>Graphic EQ + CSV</h2><span class="pill green">Footsteps</span></div>
+        <div class="bd">
+          <div class="kpiRow" style="margin-top:10px">
+            <div class="kpi">
+              <div class="t">⬇ Download included preset</div>
+              <div class="d">
+                <a class="btn primary" href="assets/cs2_pasi.csv" download>Download cs2_pasi.csv</a>
+                <div class="small muted" style="margin-top:10px">Peace: <b>Import</b> → select the CSV.</div>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="t">🧩 Build your own CSV</div>
+              <div class="d">
+                Header:
+                <div class="mono" style="margin-top:8px">Frequency(Hz),Gain(dB)</div>
+                Example:
+                <div class="mono" style="margin-top:8px">4000,3</div>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="t">✅ Chain order</div>
+              <div class="d"><span class="mono">Preamp (-7 dB)</span> → <span class="mono">ReaComp</span> → <span class="mono">Graphic EQ</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column: span 12;">
+        <div class="hd"><h2>Final test: APO ON/OFF</h2><span class="pill red">Instant A/B</span></div>
+        <div class="bd" id="test">
+          <div class="yt">
+            <iframe
+              src="https://www.youtube.com/embed/VIDEO_ID_AICI?rel=0"
+              title="CS2 Audio Fix — APO ON/OFF test"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="hr"></div>
+
+          <ul class="actions">
+            <li>Play a constant audio source (YouTube / CS2 DM)</li>
+            <li>In <b>Configuration Editor</b>, toggle effects ON/OFF and listen</li>
+            <li>If there is no difference, you’re usually on the <b>wrong device</b> or using a <b>virtual device</b></li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <footer>by Zevzec</footer>
+  </div>
+</body>
+</html>
