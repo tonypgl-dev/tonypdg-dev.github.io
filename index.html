@@ -268,15 +268,6 @@
     }
     .value.green{ color:var(--green) }
 
-    /* Tutorial sections */
-    .sectionTitle{
-      margin:18px 0 8px;
-      font-size:15px;
-      letter-spacing:.2px;
-      color:rgba(234,240,255,.92);
-    }
-    .stepList{ margin-top:10px; }
-
     /* Code block */
     .code{
       margin-top:10px;
@@ -349,115 +340,160 @@
             <span class="badge"><span class="tagAction">VAC Safe</span> • Windows Audio</span>
           </div>
 
-          <!-- RO -->
-          <div data-lang="ro" class="show" id="roBlock">
+          <!-- RO HERO -->
+          <div data-lang="ro" class="show" id="roHero">
             <h1>Auzi pașii prin rafale & explozii.</h1>
-            <p class="sub">Compresie + EQ la nivel de Windows (Equalizer APO + Peace + ReaComp). Nu modifică jocul, doar controlează dinamica sunetului.</p>
-
+            <p class="sub">Compresie + EQ la nivel de Windows (Equalizer APO + Peace + ReaComp). Nu modifică jocul.</p>
             <div class="ctaRow">
               <a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
               <a class="btn" href="#tutorial">Tutorial complet</a>
               <a class="btn" href="#test">Test APO ON/OFF</a>
             </div>
-            <div class="miniNote muted">Tip: fișierul <span class="kbd">cs2_pasi.csv</span> trebuie să fie în root (lângă <span class="kbd">index.html</span>).</div>
+            <div class="miniNote muted">Fișierul <span class="kbd">cs2_pasi.csv</span> trebuie să fie în root lângă <span class="kbd">index.html</span>.</div>
           </div>
 
-          <!-- EN -->
-          <div data-lang="en" id="enBlock">
+          <!-- EN HERO -->
+          <div data-lang="en" id="enHero">
             <h1>Hear footsteps through gunfire & explosions.</h1>
-            <p class="sub">Windows-level compression + EQ (Equalizer APO + Peace + ReaComp). No game modification — just controlled dynamic range.</p>
-
+            <p class="sub">Windows-level compression + EQ (Equalizer APO + Peace + ReaComp). No game modification.</p>
             <div class="ctaRow">
               <a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
               <a class="btn" href="#tutorial">Full tutorial</a>
               <a class="btn" href="#test">APO ON/OFF test</a>
             </div>
-            <div class="miniNote muted">Tip: <span class="kbd">cs2_pasi.csv</span> must be in root next to <span class="kbd">index.html</span>.</div>
+            <div class="miniNote muted"><span class="kbd">cs2_pasi.csv</span> must be in root next to <span class="kbd">index.html</span>.</div>
           </div>
         </div>
 
         <div>
           <div class="card">
-            <h3>Lanțul corect în Equalizer APO</h3>
-            <p class="muted">Ordinea contează. Așa e gândit presetul:</p>
+            <h3 data-lang="ro" class="show">Ce face?</h3>
+            <h3 data-lang="en">What does it do?</h3>
 
-            <div class="chain" aria-label="Processing chain">
-              <div class="node">
-                <div class="label">1) Gain</div>
-                <div class="value green">Preamp (−7 dB)</div>
-              </div>
-              <div class="arrow">↓</div>
-              <div class="node">
-                <div class="label">2) Compression</div>
-                <div class="value">ReaComp (VST)</div>
-              </div>
-              <div class="arrow">↓</div>
-              <div class="node">
-                <div class="label">3) EQ</div>
-                <div class="value">Graphic EQ</div>
-              </div>
-            </div>
+            <p data-lang="ro" class="show" class="muted">
+              Reduce diferența dintre sunetele foarte tari (arme/flash) și cele subtile (pași).
+              Rezultatul: poți ține volumul mai sigur și totuși auzi mai clar.
+            </p>
+            <p data-lang="en" class="muted">
+              It reduces the dynamic range between very loud sounds (guns/flash) and subtle ones (footsteps).
+              Result: safer volume, clearer cues.
+            </p>
 
             <ul class="list" style="margin-top:12px">
-              <li class="li"><span class="tagWarn">NU</span> rula Sonar/Voicemeeter/virtual devices în paralel.</li>
-              <li class="li"><span class="tagAction">DA</span> setări Windows: Disable Enhancements + Exclusive Mode OFF.</li>
+              <li class="li" data-lang="ro" class="show"><span class="tagAction">VAC Safe</span> — nu modifică jocul.</li>
+              <li class="li" data-lang="en"><span class="tagAction">VAC Safe</span> — no game modification.</li>
             </ul>
           </div>
         </div>
+
       </div>
     </section>
 
-    <!-- FULL TUTORIAL -->
+    <!-- FULL TUTORIAL (RO/EN) -->
     <section class="grid" id="tutorial">
+
+      <!-- STEP 1 -->
       <div class="card">
-        <h3>1) Instalează Equalizer APO</h3>
-        <ul class="list stepList">
-          <li class="li"><span class="tagAction">Download</span> Equalizer APO (SourceForge)</li>
-          <li class="li"><span class="tagAction">Run as administrator</span> installer</li>
-          <li class="li"><span class="tagAction">Bifează DOAR</span> device-ul fizic (căști/boxe reale)</li>
-          <li class="li"><span class="tagWarn">NU</span> HDMI / monitor / NVIDIA / virtual devices</li>
-          <li class="li"><span class="tagAction">Restart</span> PC</li>
-        </ul>
+        <h3 data-lang="ro" class="show">1) Instalează Equalizer APO</h3>
+        <h3 data-lang="en">1) Install Equalizer APO</h3>
 
-        <p class="miniNote muted">Dacă nu simți nicio diferență, 90% e instalat pe device-ul greșit.</p>
-      </div>
-
-      <div class="card">
-        <h3>2) Instalează Peace + ReaPlugs</h3>
-        <ul class="list stepList">
-          <li class="li"><span class="tagAction">Install</span> Peace (Full interface)</li>
-          <li class="li"><span class="tagAction">Install</span> ReaPlugs VST (64-bit, default)</li>
-          <li class="li"><span class="tagAction">Open Peace</span> → Commands → Use Editor (VST)</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>3) Creează lanțul: Preamp → ReaComp → EQ</h3>
-        <ul class="list stepList">
-          <li class="li"><span class="tagAction">În Editor (VST)</span> tab: <span class="kbd">Before Peace EQ</span></li>
-          <li class="li"><span class="tagAction">Add</span> → Basic Filters → Preamp (Preamplification) = <span class="kbd">−7.00 dB</span></li>
-          <li class="li"><span class="tagAction">Add</span> → Plugins → VST plugin → selectează <span class="kbd">reacomp-standalone.dll</span></li>
-          <li class="li"><span class="tagAction">După compresor</span> vine EQ (Peace / Graphic EQ)</li>
-        </ul>
-
-        <p class="miniNote muted">Preamp-ul înainte de compresor previne clipping/distorsiune.</p>
-      </div>
-
-      <div class="card">
-        <h3>4) Preset EQ (download) + opțional CSV</h3>
-        <ul class="list stepList">
-          <li class="li"><span class="tagAction">Download</span> preset: <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a> (root)</li>
-          <li class="li"><span class="tagAction">Import</span> în Peace (Import / Load preset)</li>
-        </ul>
-
-        <p class="sectionTitle muted">Opțional: creează-ți propriul <span class="kbd">.csv</span></p>
         <ul class="list">
-          <li class="li"><span class="tagAction">Click dreapta</span> Desktop → New → Text Document</li>
-          <li class="li">Redenumește: <span class="kbd">name.csv</span> <span class="muted">(nu .txt)</span></li>
-          <li class="li"><span class="tagAction">Lipește</span> exact:</li>
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo</a></li>
+          <li class="li" data-lang="en"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo</a></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Run as administrator</span> installer</li>
+          <li class="li" data-lang="en"><span class="tagAction">Run as administrator</span> installer</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Bifează DOAR</span> device-ul fizic (căști/boxe reale)</li>
+          <li class="li" data-lang="en"><span class="tagAction">Select ONLY</span> your real playback device (headset/speakers)</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagWarn">NU</span> HDMI / monitor / NVIDIA / virtual devices</li>
+          <li class="li" data-lang="en"><span class="tagWarn">DO NOT</span> select HDMI / monitor / NVIDIA / virtual devices</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Restart</span> PC</li>
+          <li class="li" data-lang="en"><span class="tagAction">Restart</span> your PC</li>
+        </ul>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="card">
+        <h3 data-lang="ro" class="show">2) Instalează Peace</h3>
+        <h3 data-lang="en">2) Install Peace</h3>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension</a></li>
+          <li class="li" data-lang="en"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension</a></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Alege</span> Full Interface</li>
+          <li class="li" data-lang="en"><span class="tagAction">Choose</span> Full Interface</li>
+        </ul>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="card">
+        <h3 data-lang="ro" class="show">3) Instalează ReaPlugs (Reaper)</h3>
+        <h3 data-lang="en">3) Install ReaPlugs (Reaper)</h3>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span>: <a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs</a></li>
+          <li class="li" data-lang="en"><span class="tagAction">Download</span>: <a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs</a></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Install</span> ReaPlugs VST (64-bit) cu setări default</li>
+          <li class="li" data-lang="en"><span class="tagAction">Install</span> ReaPlugs VST (64-bit) with default settings</li>
+        </ul>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="card">
+        <h3 data-lang="ro" class="show">4) Creează lanțul în Peace (IMPORTANT)</h3>
+        <h3 data-lang="en">4) Build the chain in Peace (IMPORTANT)</h3>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Peace</span> → Commands → <span class="kbd">Use Editor (VST)</span></li>
+          <li class="li" data-lang="en"><span class="tagAction">Peace</span> → Commands → <span class="kbd">Use Editor (VST)</span></li>
+
+          <li class="li" data-lang="ro" class="show">Tab: <span class="kbd">Before Peace EQ</span></li>
+          <li class="li" data-lang="en">Tab: <span class="kbd">Before Peace EQ</span></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Add</span> → Basic Filters → <span class="kbd">Preamp</span> = <span class="kbd">−7.00 dB</span></li>
+          <li class="li" data-lang="en"><span class="tagAction">Add</span> → Basic Filters → <span class="kbd">Preamp</span> = <span class="kbd">−7.00 dB</span></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Add</span> → Plugins → VST plugin → <span class="kbd">reacomp-standalone.dll</span></li>
+          <li class="li" data-lang="en"><span class="tagAction">Add</span> → Plugins → VST plugin → <span class="kbd">reacomp-standalone.dll</span></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">După compresor</span> vine EQ (Graphic EQ / Peace)</li>
+          <li class="li" data-lang="en"><span class="tagAction">After compression</span> comes EQ (Graphic EQ / Peace)</li>
+        </ul>
+      </div>
+
+      <!-- STEP 5 (EQ preset + optional CSV detail) -->
+      <div class="card">
+        <h3 data-lang="ro" class="show">5) Preset EQ</h3>
+        <h3 data-lang="en">5) EQ preset</h3>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span> preset: <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
+          <li class="li" data-lang="en"><span class="tagAction">Download</span> preset: <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Import</span> în Peace (Import / Load preset)</li>
+          <li class="li" data-lang="en"><span class="tagAction">Import</span> in Peace (Import / Load preset)</li>
         </ul>
 
-        <div class="code" aria-label="CSV contents">
+        <p class="miniNote muted" data-lang="ro" class="show">Opțional: dacă vrei să-ți faci singur CSV-ul, fă asta:</p>
+        <p class="miniNote muted" data-lang="en">Optional: if you want to create your own CSV, do this:</p>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Click dreapta</span> Desktop → New → Text Document</li>
+          <li class="li" data-lang="en"><span class="tagAction">Right click</span> Desktop → New → Text Document</li>
+
+          <li class="li" data-lang="ro" class="show">Redenumește: <span class="kbd">name.csv</span> (nu .txt)</li>
+          <li class="li" data-lang="en">Rename to: <span class="kbd">name.csv</span> (not .txt)</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Lipește</span> exact:</li>
+          <li class="li" data-lang="en"><span class="tagAction">Paste</span> exactly:</li>
+        </ul>
+
+        <div class="code">
 <pre>Frequency(Hz),Gain(dB)
 31,-2
 62,-2
@@ -475,32 +511,94 @@
         </div>
 
         <ul class="list" style="margin-top:10px">
-          <li class="li"><span class="tagAction">Save</span> → apoi <span class="tagAction">Import</span> în Peace</li>
-          <li class="li"><span class="tagWarn">Dacă devine</span> <span class="kbd">name.csv.txt</span>, activează: File Explorer → View → <b>File name extensions</b> și șterge <span class="kbd">.txt</span></li>
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Save</span> → Import în Peace</li>
+          <li class="li" data-lang="en"><span class="tagAction">Save</span> → Import in Peace</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagWarn">Dacă devine</span> <span class="kbd">name.csv.txt</span> → șterge <span class="kbd">.txt</span> (activează File name extensions)</li>
+          <li class="li" data-lang="en"><span class="tagWarn">If it becomes</span> <span class="kbd">name.csv.txt</span> → remove <span class="kbd">.txt</span> (enable File name extensions)</li>
         </ul>
       </div>
 
+      <!-- MOVED CHAIN CARD HERE (after EQ preset) -->
       <div class="card">
-        <h3>5) Windows Settings (obligatoriu)</h3>
-        <ul class="list stepList">
-          <li class="li"><span class="tagAction">Sounds</span> → Playback → device → Properties</li>
-          <li class="li"><span class="tagAction">Enhancements</span> → Disable all enhancements</li>
-          <li class="li"><span class="tagAction">Advanced</span> → 2ch, 48kHz</li>
-          <li class="li"><span class="tagAction">Debifează</span> Exclusive mode (ambele)</li>
-          <li class="li"><span class="tagAction">Communications</span> → Do nothing</li>
+        <h3 data-lang="ro" class="show">Lanțul corect în Equalizer APO</h3>
+        <h3 data-lang="en">Correct chain in Equalizer APO</h3>
+
+        <p class="muted" data-lang="ro" class="show">Ordinea contează. Așa e gândit presetul:</p>
+        <p class="muted" data-lang="en">Order matters. This is how the preset is designed:</p>
+
+        <div class="chain" aria-label="Processing chain">
+          <div class="node">
+            <div class="label">1) Gain</div>
+            <div class="value green">Preamp (−7 dB)</div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="node">
+            <div class="label">2) Compression</div>
+            <div class="value">ReaComp (VST)</div>
+          </div>
+          <div class="arrow">↓</div>
+          <div class="node">
+            <div class="label">3) EQ</div>
+            <div class="value">Graphic EQ</div>
+          </div>
+        </div>
+
+        <ul class="list" style="margin-top:12px">
+          <li class="li" data-lang="ro" class="show"><span class="tagWarn">NU</span> rula Sonar/Voicemeeter/virtual devices în paralel.</li>
+          <li class="li" data-lang="en"><span class="tagWarn">DO NOT</span> run Sonar/Voicemeeter/virtual devices in parallel.</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">DA</span> setări Windows: Disable Enhancements + Exclusive Mode OFF.</li>
+          <li class="li" data-lang="en"><span class="tagAction">YES</span> Windows settings: Disable Enhancements + Exclusive Mode OFF.</li>
         </ul>
       </div>
 
+      <!-- WINDOWS -->
       <div class="card">
-        <h3>6) CS2 Settings (recomandat)</h3>
-        <ul class="list stepList">
-          <li class="li"><span class="tagAction">Audio Output Device</span> → alege căștile tale (nu Default)</li>
-          <li class="li"><span class="tagAction">EQ Profile</span> → Crisp</li>
-          <li class="li"><span class="tagAction">L/R Isolation</span> → 0%</li>
-          <li class="li"><span class="tagAction">Perspective Correction</span> → OFF</li>
-          <li class="li"><span class="tagAction">Restart</span> joc</li>
+        <h3 data-lang="ro" class="show">6) Windows Settings</h3>
+        <h3 data-lang="en">6) Windows settings</h3>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Sounds</span> → Playback → device → Properties</li>
+          <li class="li" data-lang="en"><span class="tagAction">Sounds</span> → Playback → device → Properties</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Enhancements</span> → Disable all enhancements</li>
+          <li class="li" data-lang="en"><span class="tagAction">Enhancements</span> → Disable all enhancements</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Advanced</span> → 2 channel, 48kHz</li>
+          <li class="li" data-lang="en"><span class="tagAction">Advanced</span> → 2 channel, 48kHz</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Debifează</span> Exclusive Mode (ambele)</li>
+          <li class="li" data-lang="en"><span class="tagAction">Disable</span> Exclusive Mode (both)</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Communications</span> → Do nothing</li>
+          <li class="li" data-lang="en"><span class="tagAction">Communications</span> → Do nothing</li>
         </ul>
       </div>
+
+      <!-- CS2 -->
+      <div class="card">
+        <h3 data-lang="ro" class="show">7) CS2 Settings</h3>
+        <h3 data-lang="en">7) CS2 settings</h3>
+
+        <ul class="list">
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Output Device</span> → alege căștile tale (nu Default)</li>
+          <li class="li" data-lang="en"><span class="tagAction">Output Device</span> → pick your headset (not Default)</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">EQ Profile</span> → Crisp</li>
+          <li class="li" data-lang="en"><span class="tagAction">EQ Profile</span> → Crisp</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">L/R Isolation</span> → 0%</li>
+          <li class="li" data-lang="en"><span class="tagAction">L/R Isolation</span> → 0%</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Perspective Correction</span> → OFF</li>
+          <li class="li" data-lang="en"><span class="tagAction">Perspective Correction</span> → OFF</li>
+
+          <li class="li" data-lang="ro" class="show"><span class="tagAction">Restart</span> joc</li>
+          <li class="li" data-lang="en"><span class="tagAction">Restart</span> the game</li>
+        </ul>
+      </div>
+
     </section>
 
     <!-- VIDEO TEST -->
@@ -517,26 +615,29 @@
   <script>
     const btnRO = document.getElementById('btnRO');
     const btnEN = document.getElementById('btnEN');
-    const ro = document.getElementById('roBlock');
-    const en = document.getElementById('enBlock');
 
     function setLang(lang){
+      const nodes = document.querySelectorAll('[data-lang]');
+      nodes.forEach(n => n.classList.remove('show'));
+
       if(lang === 'ro'){
         btnRO.classList.add('active');
         btnEN.classList.remove('active');
-        ro.classList.add('show');
-        en.classList.remove('show');
         document.documentElement.lang = 'ro';
+        document.querySelectorAll('[data-lang="ro"]').forEach(n => n.classList.add('show'));
       } else {
         btnEN.classList.add('active');
         btnRO.classList.remove('active');
-        en.classList.add('show');
-        ro.classList.remove('show');
         document.documentElement.lang = 'en';
+        document.querySelectorAll('[data-lang="en"]').forEach(n => n.classList.add('show'));
       }
     }
+
     btnRO.addEventListener('click', () => setLang('ro'));
     btnEN.addEventListener('click', () => setLang('en'));
+
+    // default
+    setLang('ro');
   </script>
 </body>
 </html>
