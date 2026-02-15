@@ -1,429 +1,198 @@
 <!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CS2 Audio Fix — by Zevzec</title>
-  <meta name="description" content="CS2 Audio Fix: compresie + EQ pentru pași mai clari și explozii mai blânde (Equalizer APO + Peace + ReaComp). VAC safe." />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CS2 Audio Fix — by Zevzec</title>
 
-  <style>
-    :root{
-      --bg:#070A0F;
-      --panel:#0E1420;
-      --panel2:#0B1220;
-      --border:rgba(255,255,255,.08);
-      --text:#EAF0FF;
-      --muted:#93A4C7;
+<style>
+:root{
+--bg:#070A0F;
+--border:rgba(255,255,255,.08);
+--text:#EAF0FF;
+--muted:#93A4C7;
+--green:#3DFF75;
+--red:#FF3B3B;
+--shadow:0 16px 48px rgba(0,0,0,.45);
+--radius:18px;
+--max:1120px;
+--sans:ui-sans-serif,system-ui,Segoe UI,Roboto,Arial;
+--mono:Consolas,monospace;
+}
 
-      --green:#3DFF75; /* actions */
-      --red:#FF3B3B;   /* warnings */
-      --shadow: 0 16px 48px rgba(0,0,0,.45);
-      --radius:18px;
-      --max:1120px;
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:var(--sans);
+color:var(--text);
+background:
+radial-gradient(900px 600px at 12% 12%, rgba(255,59,59,.10), transparent 58%),
+radial-gradient(900px 600px at 85% 20%, rgba(61,255,117,.10), transparent 56%),
+var(--bg);
+}
 
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-    }
+.wrap{max-width:var(--max);margin:auto;padding:26px}
 
-    *{ box-sizing:border-box }
-    html{ scroll-behavior:smooth }
-    body{
-      margin:0;
-      font-family:var(--sans);
-      color:var(--text);
-      background:
-        radial-gradient(900px 600px at 12% 12%, rgba(255,59,59,.10), transparent 58%),
-        radial-gradient(900px 600px at 85% 20%, rgba(61,255,117,.10), transparent 56%),
-        radial-gradient(900px 700px at 55% 95%, rgba(100,140,255,.08), transparent 60%),
-        var(--bg);
-    }
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:12px;
+}
 
-    a{ color:inherit }
-    .wrap{ max-width:var(--max); margin:0 auto; padding:28px 16px 56px; }
+.brand{font-weight:800}
 
-    /* TOP BAR */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      margin-bottom:14px;
-    }
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      font-weight:800;
-      letter-spacing:.3px;
-    }
-    .brand .dot{
-      width:10px;height:10px;border-radius:99px;
-      background:linear-gradient(90deg,var(--red),var(--green));
-      box-shadow: 0 0 18px rgba(61,255,117,.35);
-    }
+.langToggle{
+border:1px solid var(--border);
+border-radius:999px;
+padding:4px;
+display:flex;
+z-index:10;
+position:relative;
+}
+.langToggle button{
+border:0;
+background:transparent;
+color:var(--muted);
+padding:8px 14px;
+cursor:pointer;
+border-radius:999px;
+font-weight:700;
+}
+.langToggle button.active{
+background:rgba(61,255,117,.15);
+color:var(--green);
+}
 
-    /* Toggle (CLICKABLE) */
-    .langToggle{
-      display:flex;
-      align-items:center;
-      gap:0;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.03);
-      border-radius:999px;
-      padding:4px;
-      box-shadow:var(--shadow);
-      user-select:none;
-      position:relative;
-      z-index:10;
-    }
-    .langToggle button{
-      border:0;
-      background:transparent;
-      color:var(--muted);
-      padding:10px 14px;
-      border-radius:999px;
-      font-weight:800;
-      cursor:pointer;
-      transition: all .15s ease;
-      min-width:54px;
-    }
-    .langToggle button:hover{ color:var(--text) }
-    .langToggle button.active{
-      background:rgba(61,255,117,.15);
-      color:var(--green);
-      box-shadow: 0 0 0 1px rgba(61,255,117,.18) inset;
-    }
+.hero{
+border:1px solid var(--border);
+border-radius:var(--radius);
+overflow:hidden;
+box-shadow:var(--shadow);
+min-height:350px;
+background:
+linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.9)),
+url("./header.png");
+background-size:cover;
+background-position:center;
+padding:26px;
+display:flex;
+flex-direction:column;
+justify-content:flex-end;
+}
 
-    /* HERO */
-    .hero{
-      border:1px solid var(--border);
-      border-radius: calc(var(--radius) + 6px);
-      overflow:hidden;
-      box-shadow:var(--shadow);
-      position:relative;
-      min-height: 360px;
-      background:
-        linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.88)),
-        url("./header.png");
-      background-size:cover;
-      background-position:center;
-    }
-    .heroInner{
-      padding:28px;
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      min-height: 360px;
-      align-content:end;
-    }
-    @media (max-width: 900px){
-      .heroInner{ grid-template-columns: 1fr; min-height: 320px; }
-    }
+h1{margin:6px 0;font-size:36px}
+.sub{color:rgba(234,240,255,.85)}
 
-    .badgeRow{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-    .badge{
-      display:inline-flex; align-items:center; gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(0,0,0,.35);
-      border:1px solid rgba(255,255,255,.10);
-      color:var(--text);
-      font-weight:800;
-      font-size:13px;
-      backdrop-filter: blur(8px);
-    }
-    .badge strong{ color:var(--green) }
-    .badge img{ height:18px; width:auto; display:block; opacity:.95; }
+.btn{
+display:inline-block;
+padding:10px 16px;
+margin-top:10px;
+border-radius:12px;
+text-decoration:none;
+border:1px solid var(--border);
+}
+.btnPrimary{
+background:rgba(61,255,117,.15);
+color:var(--green);
+}
 
-    h1{
-      margin:10px 0 8px;
-      font-size: clamp(28px, 3.4vw, 44px);
-      line-height:1.05;
-      letter-spacing:.2px;
-    }
-    .sub{
-      margin:0;
-      color:rgba(234,240,255,.82);
-      font-size: clamp(14px, 1.4vw, 16px);
-      line-height:1.5;
-      max-width: 60ch;
-    }
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+margin-top:18px;
+}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
 
-    .ctaRow{
-      margin-top:16px;
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-    .btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:10px;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background:rgba(255,255,255,.04);
-      cursor:pointer;
-      text-decoration:none;
-      font-weight:900;
-      letter-spacing:.2px;
-      transition: all .15s ease;
-    }
-    .btn:hover{
-      transform: translateY(-1px);
-      background:rgba(255,255,255,.06);
-    }
-    .btnPrimary{
-      background:rgba(61,255,117,.14);
-      border-color: rgba(61,255,117,.25);
-      color:var(--green);
-      box-shadow: 0 0 0 1px rgba(61,255,117,.12) inset;
-    }
-    .btnPrimary:hover{
-      background:rgba(61,255,117,.18);
-    }
-    .miniNote{
-      margin-top:10px;
-      color:rgba(234,240,255,.65);
-      font-size:12.5px;
-    }
+.card{
+border:1px solid var(--border);
+border-radius:var(--radius);
+padding:16px;
+box-shadow:var(--shadow);
+background:rgba(255,255,255,.02);
+}
 
-    /* Layout sections */
-    .grid{
-      margin-top:18px;
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap:14px;
-    }
-    @media (max-width: 900px){
-      .grid{ grid-template-columns:1fr; }
-    }
+.list{list-style:none;padding:0;margin:8px 0}
+.li{margin:6px 0}
 
-    .card{
-      border:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
-      border-radius: var(--radius);
-      padding:16px 16px;
-      box-shadow:var(--shadow);
-    }
-    .card h3{
-      margin:0 0 8px;
-      font-size:16px;
-      letter-spacing:.2px;
-    }
-    .card p{ margin:0; color:rgba(234,240,255,.78); line-height:1.5; font-size:14px; }
-    .muted{ color:var(--muted) }
+.tagAction{color:var(--green);font-weight:800}
+.tagWarn{color:var(--red);font-weight:800}
 
-    .list{
-      margin:10px 0 0;
-      padding:0;
-      list-style:none;
-      display:grid;
-      gap:8px;
-    }
-    .li{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      color:rgba(234,240,255,.82);
-      font-size:14px;
-      line-height:1.45;
-    }
-    .tagAction{
-      color:var(--green);
-      font-weight:900;
-    }
-    .tagWarn{
-      color:var(--red);
-      font-weight:900;
-    }
+.kbd{
+font-family:var(--mono);
+border:1px solid rgba(255,255,255,.1);
+padding:2px 6px;
+border-radius:8px;
+background:rgba(0,0,0,.3);
+}
 
-    .kbd{
-      font-family:var(--mono);
-      font-size:12.5px;
-      padding:2px 8px;
-      border-radius:10px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.30);
-      color:rgba(234,240,255,.92);
-      display:inline-block;
-    }
+.code{
+margin-top:10px;
+border:1px solid rgba(255,255,255,.1);
+border-radius:12px;
+padding:10px;
+background:rgba(0,0,0,.35);
+overflow:auto;
+}
+.code pre{margin:0;font-family:var(--mono)}
 
-    /* Chain arrows */
-    .chain{
-      margin-top:10px;
-      display:grid;
-      gap:10px;
-      font-family:var(--mono);
-      font-size:13px;
-    }
-    .node{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.30);
-    }
-    .node .label{ color:var(--muted); font-family:var(--sans); font-weight:800; font-size:12px; }
-    .node .value{ margin-top:4px; font-weight:900; color:var(--text); }
-    .arrow{
-      display:flex; align-items:center; justify-content:center;
-      color:rgba(234,240,255,.35);
-      font-size:22px;
-      line-height:1;
-    }
-    .value.green{ color:var(--green) }
+.video{margin-top:18px}
+.video iframe{width:100%;aspect-ratio:16/9;border:0}
 
-    /* Code block */
-    .code{
-      margin-top:10px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.35);
-      border-radius:14px;
-      padding:12px 12px;
-      overflow:auto;
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-    }
-    .code pre{
-      margin:0;
-      font-family:var(--mono);
-      font-size:12.5px;
-      line-height:1.45;
-      color:rgba(234,240,255,.92);
-      white-space:pre;
-    }
+footer{text-align:center;margin-top:20px;color:rgba(234,240,255,.55)}
 
-    /* Video */
-    .video{
-      margin-top:14px;
-      border-radius: var(--radius);
-      overflow:hidden;
-      border:1px solid var(--border);
-      background:rgba(0,0,0,.25);
-      box-shadow:var(--shadow);
-    }
-    .video iframe{
-      width:100%;
-      aspect-ratio: 16 / 9;
-      border:0;
-      display:block;
-    }
-
-    /* Footer */
-    footer{
-      margin-top:22px;
-      text-align:center;
-      color:rgba(234,240,255,.55);
-      font-size:12.5px;
-    }
-
-    /* Language blocks */
-    [data-lang]{ display:none; }
-    [data-lang].show{ display:block; }
-  </style>
+[data-lang]{display:none}
+.show{display:block}
+</style>
 </head>
 
 <body>
-  <div class="wrap">
-    <div class="topbar">
-      <div class="brand">
-        <span class="dot"></span>
-        <span>CS2 Audio Fix</span>
-      </div>
+<div class="wrap">
 
-      <div class="langToggle" role="tablist" aria-label="Language toggle">
-        <button id="btnRO" class="active" type="button">RO</button>
-        <button id="btnEN" type="button">EN</button>
-      </div>
-    </div>
+<div class="topbar">
+<div class="brand">CS2 Audio Fix</div>
+<div class="langToggle">
+<button id="btnRO" class="active">RO</button>
+<button id="btnEN">EN</button>
+</div>
+</div>
 
-    <!-- HERO -->
-    <section class="hero" aria-label="Header">
-      <div class="heroInner">
-        <div>
-          <div class="badgeRow">
-            <span class="badge"><img src="./csgo-4.svg" alt="CS2" /> <span><strong>Optimized</strong> for CS2</span></span>
-            <span class="badge"><span class="tagAction">VAC Safe</span> • Windows Audio</span>
-          </div>
+<section class="hero">
+<div id="roBlock" class="show" data-lang="ro">
+<h1>Auzi pașii prin rafale și explozii</h1>
+<p class="sub">Compresie + EQ la nivel de Windows (Equalizer APO + Peace + ReaComp). VAC Safe.</p>
+<a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
+</div>
 
-          <!-- RO -->
-          <div data-lang="ro" class="show" id="roBlock">
-            <h1>Auzi pașii prin rafale & explozii.</h1>
-            <p class="sub">Compresie + EQ la nivel de Windows (Equalizer APO + Peace + ReaComp). Nu modifică jocul, doar controlează dinamica sunetului.</p>
+<div id="enBlock" data-lang="en">
+<h1>Hear footsteps through gunfire</h1>
+<p class="sub">Windows compression + EQ. VAC Safe.</p>
+<a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
+</div>
+</section>
 
-            <div class="ctaRow">
-              <a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
-              <a class="btn" href="#tutorial">Tutorial rapid</a>
-            </div>
-            <div class="miniNote muted">Tip: dacă nu se descarcă, verifică să existe fișierul <span class="kbd">cs2_pasi.csv</span> în root (lângă <span class="kbd">index.html</span>).</div>
-          </div>
+<section class="grid">
 
-          <!-- EN -->
-          <div data-lang="en" id="enBlock">
-            <h1>Hear footsteps through gunfire & explosions.</h1>
-            <p class="sub">Windows-level compression + EQ (Equalizer APO + Peace + ReaComp). No game modification — just controlled dynamic range.</p>
+<div class="card">
+<h3>Download preset</h3>
+<ul class="list">
+<li class="li"><span class="tagAction">Download</span> <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
+<li class="li"><span class="tagAction">Import</span> în Peace</li>
+</ul>
+</div>
 
-            <div class="ctaRow">
-              <a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
-              <a class="btn" href="#tutorial">Quick tutorial</a>
-            </div>
-            <div class="miniNote muted">Tip: if download fails, make sure <span class="kbd">cs2_pasi.csv</span> is in root next to <span class="kbd">index.html</span>.</div>
-          </div>
-        </div>
+<div class="card">
+<h3>Opțional: creează-ți propriul CSV</h3>
 
-        <div>
-          <div class="card">
-            <h3 id="tutorial">Lanțul corect în Equalizer APO</h3>
-            <p class="muted">Ordinea contează. Așa e gândit presetul:</p>
+<ul class="list">
+<li class="li"><span class="tagAction">Click dreapta</span> Desktop → <span class="tagAction">New → Text Document</span></li>
+<li class="li">Redenumește: <span class="kbd">name.csv</span></li>
+<li class="li"><span class="tagAction">Deschide</span> și lipește exact:</li>
+</ul>
 
-            <div class="chain" aria-label="Processing chain">
-              <div class="node">
-                <div class="label">1) Gain</div>
-                <div class="value green">Preamp (−7 dB)</div>
-              </div>
-              <div class="arrow">↓</div>
-              <div class="node">
-                <div class="label">2) Compression</div>
-                <div class="value">ReaComp (VST)</div>
-              </div>
-              <div class="arrow">↓</div>
-              <div class="node">
-                <div class="label">3) EQ</div>
-                <div class="value">Graphic EQ</div>
-              </div>
-            </div>
-
-            <ul class="list" style="margin-top:12px">
-              <li class="li"><span class="tagWarn">NU</span> rula Sonar/Voicemeeter/virtual devices în paralel.</li>
-              <li class="li"><span class="tagAction">DA</span> setări Windows: Disable Enhancements + Exclusive Mode OFF.</li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CONTENT GRID -->
-    <section class="grid">
-      <div class="card">
-        <h3>Download preset</h3>
-        <p>Fișierul e în <span class="kbd">root</span>, deci linkul e direct:</p>
-        <ul class="list">
-          <li class="li"><span class="tagAction">Download</span> <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
-          <li class="li"><span class="tagAction">Import</span> în Peace (Import / Load preset).</li>
-        </ul>
-      </div>
-
-      <div class="card">
-        <h3>Opțional: creează-ți propriul CSV</h3>
-        <ul class="list">
-          <li class="li"><span class="tagAction">Click dreapta</span> pe Desktop → <span class="tagAction">New → Text Document</span></li>
-          <li class="li">Redenumește: <span class="kbd">name.csv</span> <span class="muted">(nu .txt)</span></li>
-          <li class="li"><span class="tagAction">Deschide</span> fișierul și lipește exact:</li>
-        </ul>
-
-        <div class="code" aria-label="CSV contents">
-          <pre>Frequency(Hz),Gain(dB)
+<div class="code">
+<pre>Frequency(Hz),Gain(dB)
 31,-2
 62,-2
 125,-2
@@ -437,50 +206,42 @@
 8000,1
 12000,0.5
 16000,0</pre>
-        </div>
+</div>
 
-        <ul class="list" style="margin-top:10px">
-          <li class="li"><span class="tagAction">Save</span> → apoi <span class="tagAction">Import</span> în Peace</li>
-          <li class="li"><span class="tagWarn">Dacă devine</span> <span class="kbd">name.csv.txt</span>, activează: File Explorer → View → <b>File name extensions</b> și șterge <span class="kbd">.txt</span></li>
-        </ul>
-      </div>
-    </section>
+<ul class="list">
+<li class="li"><span class="tagAction">Save</span> → Import în Peace</li>
+<li class="li"><span class="tagWarn">Dacă devine</span> name.csv.txt → șterge .txt</li>
+</ul>
+</div>
 
-    <!-- VIDEO -->
-    <section class="video" aria-label="YouTube test">
-      <iframe src="https://www.youtube.com/embed/UHwiME-LhSE?rel=0"
-              title="CS2 Audio Fix — Test APO ON/OFF"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowfullscreen></iframe>
-    </section>
+</section>
 
-    <footer>by Zevzec</footer>
-  </div>
+<section class="video">
+<iframe src="https://www.youtube.com/embed/UHwiME-LhSE?rel=0" allowfullscreen></iframe>
+</section>
 
-  <script>
-    const btnRO = document.getElementById('btnRO');
-    const btnEN = document.getElementById('btnEN');
-    const ro = document.getElementById('roBlock');
-    const en = document.getElementById('enBlock');
+<footer>by Zevzec</footer>
+</div>
 
-    function setLang(lang){
-      if(lang === 'ro'){
-        btnRO.classList.add('active');
-        btnEN.classList.remove('active');
-        ro.classList.add('show');
-        en.classList.remove('show');
-        document.documentElement.lang = 'ro';
-      } else {
-        btnEN.classList.add('active');
-        btnRO.classList.remove('active');
-        en.classList.add('show');
-        ro.classList.remove('show');
-        document.documentElement.lang = 'en';
-      }
-    }
+<script>
+const btnRO=document.getElementById('btnRO');
+const btnEN=document.getElementById('btnEN');
+const ro=document.getElementById('roBlock');
+const en=document.getElementById('enBlock');
 
-    btnRO.addEventListener('click', () => setLang('ro'));
-    btnEN.addEventListener('click', () => setLang('en'));
-  </script>
+btnRO.onclick=()=>{
+btnRO.classList.add('active');
+btnEN.classList.remove('active');
+ro.classList.add('show');
+en.classList.remove('show');
+};
+btnEN.onclick=()=>{
+btnEN.classList.add('active');
+btnRO.classList.remove('active');
+en.classList.add('show');
+ro.classList.remove('show');
+};
+</script>
+
 </body>
 </html>
