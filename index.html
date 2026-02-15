@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="ro">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CS2 Audio Fix — by Zevzec</title>
+  <meta name="description" content="Ghid CS2: compresie + EQ pentru pași mai clari și explozii mai blânde (Equalizer APO + Peace + ReaComp)." />
+
+  <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#101826;
+      --panel2:#0f1724;
+      --text:#e6edf3;
+      --muted:#9aa4b2;
+      --border:rgba(255,255,255,.08);
+      --green:#4cff7a;   /* actions */
+      --red:#ff3b3b;     /* warning */
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+      --max:1100px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      background: radial-gradient(1200px 800px at 60% 0%, rgba(255,59,59,.10), transparent 60%),
+                  radial-gradient(900px 600px at 20% 20%, rgba(76,255,122,.10), transparent 55%),
+                  var(--bg);
+      color:var(--text);
+    }
+
+    a{color:var(--green); text-decoration:none}
+    a:hover{opacity:.9; text-decoration:underline}
+    .wrap{max-width:var(--max); margin:0 auto; padding:24px}
+
+    /* HERO */
+    .hero{
+      position:relative;
+      border:1px solid var(--border);
+      border-radius: calc(var(--radius) + 6px);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+      background: #070a0f;
+      min-height: 380px;
+    }
+    .hero::before{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        linear-gradient(110deg, rgba(11,15,20,.95) 0%, rgba(11,15,20,.70) 40%, rgba(11,15,20,.90) 100%),
+        url("assets/hero.png") center/cover no-repeat;
+      filter:saturate(1.05) contrast(1.05);
+    }
+    .hero::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(900px 450px at 70% 20%, rgba(76,255,122,.16), transparent 60%),
+        radial-gradient(800px 420px at 20% 30%, rgba(255,59,59,.18), transparent 60%);
+      pointer-events:none;
+      mix-blend-mode: screen;
+      opacity:.8;
+    }
+    .heroInner{
+      position:relative;
+      padding: 28px;
+      display:flex;
+      gap:24px;
+      align-items:flex-end;
+      justify-content:space-between;
+      min-height: 380px;
+    }
+    .topbar{
+      position:absolute;
+      top:18px; left:18px; right:18px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+    }
+    .lang{
+      display:flex; gap:10px; align-items:center;
+      font-size:14px;
+      background: rgba(16,24,38,.65);
+      border:1px solid var(--border);
+      padding:8px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(10px);
+    }
+    .lang a{
+      color:var(--muted);
+      font-weight:600;
+      padding:4px 8px;
+      border-radius:999px;
+    }
+    .lang a.active{color:var(--text); background: rgba(255,255,255,.06)}
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background: rgba(16,24,38,.70);
+      backdrop-filter: blur(10px);
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .badge b{color:var(--green)}
+    .badge img{height:18px; width:auto; filter: drop-shadow(0 6px 16px rgba(0,0,0,.6))}
+    h1{
+      margin:0 0 10px 0;
+      font-size: clamp(28px, 4vw, 44px);
+      line-height:1.05;
+      letter-spacing:-.5px;
+    }
+    .sub{
+      margin:0 0 16px 0;
+      max-width: 62ch;
+      color:var(--muted);
+      font-size:16px;
+      line-height:1.5;
+    }
+    .ctaRow{display:flex; gap:12px; flex-wrap:wrap}
+    .btn{
+      display:inline-flex; align-items:center; gap:10px;
+      border-radius: 12px;
+      padding: 12px 14px;
+      border:1px solid var(--border);
+      background: rgba(16,24,38,.70);
+      color:var(--text);
+      font-weight:800;
+      letter-spacing:.15px;
+      box-shadow: 0 10px 18px rgba(0,0,0,.25);
+    }
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(76,255,122,.20), rgba(76,255,122,.10));
+      border-color: rgba(76,255,122,.35);
+    }
+    .btn.red{
+      background: linear-gradient(135deg, rgba(255,59,59,.20), rgba(255,59,59,.10));
+      border-color: rgba(255,59,59,.35);
+    }
+    .btn:hover{transform: translateY(-1px)}
+    .btn:active{transform: translateY(0px)}
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:16px;
+      margin-top: 18px;
+    }
+
+    /* CARDS */
+    .card{
+      border:1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(16,24,38,.55);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 26px rgba(0,0,0,.22);
+      overflow:hidden;
+    }
+    .card .hd{
+      padding:14px 16px;
+      border-bottom:1px solid var(--border);
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      background: rgba(15,23,36,.65);
+    }
+    .card .hd h2{
+      margin:0;
+      font-size:14px;
+      letter-spacing:.25px;
+      text-transform:uppercase;
+      color: var(--muted);
+    }
+    .card .bd{padding:16px}
+    .kpis{grid-column: span 12}
+    .kpiRow{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    .kpi{
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding:12px 12px;
+      background: rgba(11,15,20,.35);
+    }
+    .kpi .t{font-weight:900}
+    .kpi .d{color:var(--muted); font-size:13px; margin-top:6px; line-height:1.35}
+
+    .warn{
+      border-color: rgba(255,59,59,.30);
+      background: linear-gradient(135deg, rgba(255,59,59,.10), rgba(16,24,38,.55));
+    }
+    .warn .hd{border-bottom-color: rgba(255,59,59,.22)}
+    .actions{
+      margin:0;
+      padding-left: 18px;
+      line-height:1.55;
+    }
+    .actions li{margin:6px 0}
+    .actions li b{color:var(--green)}
+    .muted{color:var(--muted)}
+    .mono{font-family: var(--mono)}
+    .hr{
+      height:1px; background: var(--border); margin: 18px 0;
+    }
+
+    /* TABLES */
+    table{
+      width:100%;
+      border-collapse: collapse;
+      font-size:14px;
+      overflow:hidden;
+      border-radius: 14px;
+      border:1px solid var(--border);
+      background: rgba(11,15,20,.30);
+    }
+    th, td{
+      padding:10px 10px;
+      border-bottom:1px solid var(--border);
+      vertical-align: top;
+    }
+    th{
+      text-align:left;
+      color: var(--muted);
+      font-size:12px;
+      letter-spacing:.3px;
+      text-transform: uppercase;
+      background: rgba(15,23,36,.70);
+    }
+    tr:last-child td{border-bottom:none}
+    .pill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding:6px 10px;
+      border:1px solid var(--border);
+      border-radius:999px;
+      background: rgba(16,24,38,.55);
+      font-weight:800;
+      font-size:13px;
+    }
+    .pill.green{border-color: rgba(76,255,122,.35)}
+    .pill.red{border-color: rgba(255,59,59,.35)}
+    .small{font-size:13px; line-height:1.45}
+    .step{
+      display:flex; gap:12px; align-items:flex-start;
+      border:1px solid var(--border);
+      border-radius: 14px;
+      padding:14px;
+      background: rgba(11,15,20,.25);
+      margin: 10px 0;
+    }
+    .num{
+      width:34px; height:34px; border-radius: 10px;
+      display:grid; place-items:center;
+      font-weight:1000;
+      background: rgba(76,255,122,.12);
+      border:1px solid rgba(76,255,122,.25);
+      color: var(--text);
+      flex: 0 0 auto;
+    }
+    .step h3{margin:0 0 8px 0; font-size:16px}
+    .step .txt{margin:0; color: var(--muted)}
+    .yt{
+      position:relative;
+      padding-top:56.25%;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid var(--border);
+      background: rgba(0,0,0,.25);
+    }
+    .yt iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
+    footer{
+      margin: 22px 0 10px 0;
+      text-align:center;
+      color: rgba(230,237,243,.65);
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+
+    @media (max-width: 860px){
+      .heroInner{flex-direction:column; align-items:flex-start}
+      .kpiRow{grid-template-columns: 1fr}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <section class="hero">
+      <div class="topbar">
+        <span class="badge">
+          <img src="assets/cs2.svg" alt="CS2" />
+          <span><b>Optimized</b> for CS2</span>
+        </span>
+
+        <nav class="lang" aria-label="Language">
+          <a class="active" href="index.html">RO</a>
+          <a href="en.html">EN</a>
+        </nav>
+      </div>
+
+      <div class="heroInner">
+        <div>
+          <h1>CS2 Audio Fix</h1>
+          <p class="sub">
+            Ghid rapid pentru <b>pași mai audibili</b> și <b>explozii/arme mai blânde</b>, folosind Equalizer APO + Peace + ReaComp.
+          </p>
+
+          <div class="ctaRow">
+            <a class="btn primary" href="#start">▶ Start instalarea</a>
+            <a class="btn" href="#downloads">⬇ Download links</a>
+            <a class="btn red" href="#test">🎧 Test APO ON/OFF</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card kpis">
+        <div class="hd"><h2>Ce face</h2><span class="pill green">CS2 only</span></div>
+        <div class="bd">
+          <div class="kpiRow">
+            <div class="kpi">
+              <div class="t">🔊 Limitează peak-urile</div>
+              <div class="d">Arme / flash / explozii nu mai “sparg” volumul.</div>
+            </div>
+            <div class="kpi">
+              <div class="t">👟 Pași mai clari</div>
+              <div class="d">Scoate în față detaliile utile (footsteps).</div>
+            </div>
+            <div class="kpi">
+              <div class="t">🛡️ Nu e cheat</div>
+              <div class="d">Nu modifică jocul, doar procesare audio în Windows.</div>
+            </div>
+          </div>
+          <p class="small muted" style="margin-top:12px">
+            Tehnic: <b>dynamic range compression la nivel de Windows</b>.
+          </p>
+        </div>
+      </section>
+
+      <section class="card warn" style="grid-column: span 12;">
+        <div class="hd"><h2>IMPORTANT înainte</h2><span class="pill red">Fă asta prima dată</span></div>
+        <div class="bd">
+          <p class="small" style="margin:0 0 10px 0;">
+            Dacă ai dispozitive audio virtuale, pot strica instalarea.
+          </p>
+          <ul class="actions">
+            <li><b>Dezinstalează complet</b> SteelSeries Sonar / Voicemeeter / Virtual Audio Cable</li>
+            <li><b>Restart PC</b></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="card" id="downloads" style="grid-column: span 12;">
+        <div class="hd"><h2>Download links</h2><span class="pill">Unelte</span></div>
+        <div class="bd">
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Link</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>Equalizer APO</b></td>
+                <td><a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo/</a></td>
+                <td>Rulează installer-ul ca admin</td>
+              </tr>
+              <tr>
+                <td><b>Peace</b></td>
+                <td><a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension/</a></td>
+                <td>Alege <b>Full Interface</b></td>
+              </tr>
+              <tr>
+                <td><b>ReaPlugs</b></td>
+                <td><a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs/</a></td>
+                <td>Instalează varianta 64-bit (default)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" id="start" style="grid-column: span 12;">
+        <div class="hd"><h2>Ghid (conținutul tău, aranjat în pași)</h2><span class="pill green">Acțiunile sunt verzi</span></div>
+        <div class="bd">
+          <div class="step">
+            <div class="num">1</div>
+            <div>
+              <h3>Instalează Equalizer APO</h3>
+              <ul class="actions">
+                <li><b>Descarcă</b>: <span class="mono">https://sourceforge.net/projects/equalizerapo/</span></li>
+                <li><b>Click dreapta</b> pe installer → <b>Run as administrator</b></li>
+                <li>Când apare lista de device-uri: <b>BIFEAZĂ DOAR device-ul fizic real</b> (USB Headset / Realtek Speakers)</li>
+                <li><b>NU bifa</b>: monitor / HDMI / NVIDIA / Sonar / virtual devices</li>
+                <li><b>Finish → Restart PC</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">2</div>
+            <div>
+              <h3>Instalează Peace</h3>
+              <ul class="actions">
+                <li><b>Descarcă</b>: <span class="mono">https://sourceforge.net/projects/peace-equalizer-apo-extension/</span></li>
+                <li>La instalare: <b>Full Interface</b></li>
+                <li><b>Deschide Peace</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">3</div>
+            <div>
+              <h3>Instalează ReaPlugs</h3>
+              <ul class="actions">
+                <li><b>Descarcă</b>: <span class="mono">https://www.reaper.fm/reaplugs/</span></li>
+                <li>Instalează <b>ReaPlugs VST (Reaper) 64-bit</b> cu setările default</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">4</div>
+            <div>
+              <h3>Adaugă lanțul corect în Editor (VST)</h3>
+              <ul class="actions">
+                <li>În Peace → <b>Commands</b> → <b>Use Editor (VST)</b></li>
+                <li>Tab: <b>Before Peace EQ</b></li>
+                <li><b>Șterge tabul</b> <span class="mono">config.txt</span> dacă apare</li>
+              </ul>
+              <p class="small muted" style="margin:8px 0 0 0;">(Lanț recomandat: Preamp → ReaComp → Graphic EQ)</p>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">5</div>
+            <div>
+              <h3>Setări GAIN (înainte de compresor)</h3>
+              <ul class="actions">
+                <li>Apasă <b>+</b> → <b>Basic Filters</b> → <b>Preamp (Preamplification)</b></li>
+                <li>Setează <b>-7.00 dB</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">6</div>
+            <div>
+              <h3>Adaugă ReaComp (VST)</h3>
+              <ul class="actions">
+                <li>Apasă <b>+</b> → <b>Plugins</b> → <b>VST plugin</b></li>
+                <li>Selectează: <span class="mono">Program Files → VSTPlugins → ReaPlugs → reacomp-standalone.dll</span></li>
+                <li>Apasă <b>Open panel</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="num">7</div>
+            <div>
+              <h3>Salvează</h3>
+              <ul class="actions">
+                <li><b>Ctrl + S</b> în Configuration Editor</li>
+              </ul>
+              <p class="small muted" style="margin:8px 0 0 0;">(Dacă nu salvezi, setările nu se aplică.)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column: span 12;">
+        <div class="hd"><h2>Setări ReaComp</h2><span class="pill">Compresor</span></div>
+        <div class="bd">
+          <table>
+            <thead>
+              <tr>
+                <th>Parametru</th>
+                <th>Valoare</th>
+                <th>Note</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><b>Threshold</b></td><td class="mono">-30 dB</td><td>prinde peak-urile</td></tr>
+              <tr><td><b>Ratio</b></td><td class="mono">4:1</td><td>compresie “safe”</td></tr>
+              <tr><td><b>Attack</b></td><td class="mono">3 ms</td><td>prinde armele/flash-ul</td></tr>
+              <tr><td><b>Release</b></td><td class="mono">150 ms</td><td>revine natural</td></tr>
+              <tr><td><b>Knee size</b></td><td class="mono">3 dB</td><td>mai smooth</td></tr>
+              <tr><td><b>Classic attack</b></td><td class="mono">ON</td><td></td></tr>
+              <tr><td><b>Auto make-up</b></td><td class="mono">OFF</td><td></td></tr>
+              <tr><td><b>Output mix (Wet)</b></td><td class="mono">+6 dB</td><td>recuperează nivelul</td></tr>
+              <tr><td><b>Output mix (Dry)</b></td><td class="mono">-inf</td><td>doar semnal procesat</td></tr>
+              <tr><td><b>Limit output</b></td><td class="mono">ON</td><td>evită clipping</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column: span 12;">
+        <div class="hd"><h2>EQ (Graphic EQ) + CSV</h2><span class="pill green">Pași în față</span></div>
+        <div class="bd">
+          <p class="small" style="margin-top:0">
+            Poți folosi preset-ul inclus sau îți poți crea propriul CSV.
+          </p>
+
+          <div class="kpiRow" style="margin-top:10px">
+            <div class="kpi">
+              <div class="t">⬇ Descarcă preset-ul inclus</div>
+              <div class="d">
+                <a class="btn primary" href="assets/cs2_pasi.csv" download>Download cs2_pasi.csv</a>
+                <div class="small muted" style="margin-top:10px">
+                  În Peace: <b>Import</b> → selectezi fișierul CSV.
+                </div>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="t">🧩 Creează propriul CSV</div>
+              <div class="d">
+                Format (prima linie):
+                <div class="mono" style="margin-top:8px">Frequency(Hz),Gain(dB)</div>
+                Apoi perechi frecvență / gain.
+                <div class="small muted" style="margin-top:8px">
+                  Exemplu: <span class="mono">4000,3</span> (ridică zona de pași)
+                </div>
+              </div>
+            </div>
+            <div class="kpi">
+              <div class="t">✅ Ordinea lanțului</div>
+              <div class="d">
+                <span class="mono">Preamp (-7 dB)</span> → <span class="mono">ReaComp</span> → <span class="mono">Graphic EQ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="card" style="grid-column: span 12;">
+        <div class="hd"><h2>Test final: APO ON/OFF</h2><span class="pill red">Compară instant</span></div>
+        <div class="bd" id="test">
+          <p class="small" style="margin-top:0">
+            În clip poți testa diferența rapid (APO ON/OFF) și verifici dacă ai sunetul pe device-ul corect.
+          </p>
+
+          <div class="yt" aria-label="YouTube embed">
+https://www.youtube.com/watch?v=UHwiME-LhSE
+            <iframe
+              src="https://www.youtube.com/embed/VIDEO_ID_AICI?rel=0"
+              title="CS2 Audio Fix — Test APO ON/OFF"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen>
+            </iframe>
+          </div>
+
+          <div class="hr"></div>
+
+          <ul class="actions">
+            <li>Pornește un sunet constant (ex: YouTube / DM în CS2)</li>
+            <li>În <b>Configuration Editor</b>, debifează/activează efectele (ON/OFF) și ascultă diferența</li>
+            <li>Dacă nu se aude nicio diferență, de obicei e pe <b>device greșit</b> sau ai un <b>virtual device</b> activ</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+
+    <footer>by Zevzec</footer>
+  </div>
+</body>
+</html>
