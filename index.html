@@ -74,7 +74,7 @@
       box-shadow:var(--shadow);
       user-select:none;
       position:relative;
-      z-index:10; /* important so it stays clickable */
+      z-index:10;
     }
     .langToggle button{
       border:0;
@@ -275,6 +275,25 @@
     }
     .value.green{ color:var(--green) }
 
+    /* Code block */
+    .code{
+      margin-top:10px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.35);
+      border-radius:14px;
+      padding:12px 12px;
+      overflow:auto;
+      box-shadow: 0 10px 24px rgba(0,0,0,.35);
+    }
+    .code pre{
+      margin:0;
+      font-family:var(--mono);
+      font-size:12.5px;
+      line-height:1.45;
+      color:rgba(234,240,255,.92);
+      white-space:pre;
+    }
+
     /* Video */
     .video{
       margin-top:14px;
@@ -302,7 +321,6 @@
     /* Language blocks */
     [data-lang]{ display:none; }
     [data-lang].show{ display:block; }
-
   </style>
 </head>
 
@@ -397,13 +415,34 @@
       </div>
 
       <div class="card">
-        <h3>Creează propriul CSV (rapid)</h3>
+        <h3>Opțional: creează-ți propriul CSV</h3>
         <ul class="list">
-          <li class="li"><span class="tagAction">New file</span> pe Desktop: <span class="kbd">nume.csv</span></li>
-          <li class="li"><span class="tagAction">Paste</span> valorile exact → Save</li>
-          <li class="li"><span class="tagAction">Import</span> în Peace</li>
+          <li class="li"><span class="tagAction">Click dreapta</span> pe Desktop → <span class="tagAction">New → Text Document</span></li>
+          <li class="li">Redenumește: <span class="kbd">name.csv</span> <span class="muted">(nu .txt)</span></li>
+          <li class="li"><span class="tagAction">Deschide</span> fișierul și lipește exact:</li>
         </ul>
-        <p class="miniNote muted">Dacă Windows îți pune „.txt”, activează: File Explorer → View → <b>File name extensions</b>.</p>
+
+        <div class="code" aria-label="CSV contents">
+          <pre>Frequency(Hz),Gain(dB)
+31,-2
+62,-2
+125,-2
+250,-1
+500,-0.5
+1000,0
+2000,2
+3000,2.5
+4000,3
+6000,2
+8000,1
+12000,0.5
+16000,0</pre>
+        </div>
+
+        <ul class="list" style="margin-top:10px">
+          <li class="li"><span class="tagAction">Save</span> → apoi <span class="tagAction">Import</span> în Peace</li>
+          <li class="li"><span class="tagWarn">Dacă devine</span> <span class="kbd">name.csv.txt</span>, activează: File Explorer → View → <b>File name extensions</b> și șterge <span class="kbd">.txt</span></li>
+        </ul>
       </div>
     </section>
 
@@ -419,7 +458,6 @@
   </div>
 
   <script>
-    // Make toggle 100% clickable and switch language blocks
     const btnRO = document.getElementById('btnRO');
     const btnEN = document.getElementById('btnEN');
     const ro = document.getElementById('roBlock');
