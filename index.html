@@ -1,13 +1,16 @@
 <!doctype html>
 <html lang="ro">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>CS2 Audio Fix — by Zevzec</title>
+<meta name="description" content="CS2 Audio Fix: compresie + EQ pentru pași mai clari și explozii mai blânde (Equalizer APO + Peace + ReaComp). VAC safe." />
 
 <style>
 :root{
 --bg:#070A0F;
+--panel:#0E1420;
+--panel2:#0B1220;
 --border:rgba(255,255,255,.08);
 --text:#EAF0FF;
 --muted:#93A4C7;
@@ -21,6 +24,7 @@
 }
 
 *{box-sizing:border-box}
+html{scroll-behavior:smooth}
 body{
 margin:0;
 font-family:var(--sans);
@@ -28,122 +32,65 @@ color:var(--text);
 background:
 radial-gradient(900px 600px at 12% 12%, rgba(255,59,59,.10), transparent 58%),
 radial-gradient(900px 600px at 85% 20%, rgba(61,255,117,.10), transparent 56%),
+radial-gradient(900px 700px at 55% 95%, rgba(100,140,255,.08), transparent 60%),
 var(--bg);
 }
 
-.wrap{max-width:var(--max);margin:auto;padding:26px}
+a{color:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:28px 16px 56px;}
 
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:12px;
-}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;}
+.brand .dot{width:10px;height:10px;border-radius:99px;background:linear-gradient(90deg,var(--red),var(--green));}
 
-.brand{font-weight:800}
-
-.langToggle{
-border:1px solid var(--border);
-border-radius:999px;
-padding:4px;
-display:flex;
-z-index:10;
-position:relative;
-}
-.langToggle button{
-border:0;
-background:transparent;
-color:var(--muted);
-padding:8px 14px;
-cursor:pointer;
-border-radius:999px;
-font-weight:700;
-}
-.langToggle button.active{
-background:rgba(61,255,117,.15);
-color:var(--green);
-}
+.langToggle{display:flex;border:1px solid var(--border);border-radius:999px;padding:4px;position:relative;z-index:10;}
+.langToggle button{border:0;background:transparent;color:var(--muted);padding:10px 14px;border-radius:999px;font-weight:800;cursor:pointer;}
+.langToggle button.active{background:rgba(61,255,117,.15);color:var(--green);}
 
 .hero{
 border:1px solid var(--border);
-border-radius:var(--radius);
+border-radius:calc(var(--radius) + 6px);
 overflow:hidden;
 box-shadow:var(--shadow);
-min-height:350px;
-background:
-linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,.9)),
-url("./header.png");
+min-height:360px;
+background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.88)),url("./header.png");
 background-size:cover;
 background-position:center;
-padding:26px;
-display:flex;
-flex-direction:column;
-justify-content:flex-end;
 }
+.heroInner{padding:28px;display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-content:end;}
+@media(max-width:900px){.heroInner{grid-template-columns:1fr;}}
 
-h1{margin:6px 0;font-size:36px}
-.sub{color:rgba(234,240,255,.85)}
+.badge{display:inline-flex;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.10);font-weight:800;}
+.badge strong{color:var(--green)}
 
-.btn{
-display:inline-block;
-padding:10px 16px;
-margin-top:10px;
-border-radius:12px;
-text-decoration:none;
-border:1px solid var(--border);
-}
-.btnPrimary{
-background:rgba(61,255,117,.15);
-color:var(--green);
-}
+h1{margin:10px 0 8px;font-size:40px}
+.sub{color:rgba(234,240,255,.82)}
 
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:16px;
-margin-top:18px;
-}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.ctaRow{margin-top:16px;display:flex;gap:10px;}
+.btn{padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.04);text-decoration:none;font-weight:900;}
+.btnPrimary{background:rgba(61,255,117,.14);color:var(--green)}
 
-.card{
-border:1px solid var(--border);
-border-radius:var(--radius);
-padding:16px;
-box-shadow:var(--shadow);
-background:rgba(255,255,255,.02);
-}
+.grid{margin-top:18px;display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media(max-width:900px){.grid{grid-template-columns:1fr;}}
 
-.list{list-style:none;padding:0;margin:8px 0}
-.li{margin:6px 0}
+.card{border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);}
 
-.tagAction{color:var(--green);font-weight:800}
-.tagWarn{color:var(--red);font-weight:800}
+.list{list-style:none;padding:0;margin:10px 0;}
+.li{margin:6px 0;}
+.tagAction{color:var(--green);font-weight:900;}
+.tagWarn{color:var(--red);font-weight:900;}
 
-.kbd{
-font-family:var(--mono);
-border:1px solid rgba(255,255,255,.1);
-padding:2px 6px;
-border-radius:8px;
-background:rgba(0,0,0,.3);
-}
+.kbd{font-family:var(--mono);border:1px solid rgba(255,255,255,.10);padding:2px 8px;border-radius:10px;background:rgba(0,0,0,.30);}
 
-.code{
-margin-top:10px;
-border:1px solid rgba(255,255,255,.1);
-border-radius:12px;
-padding:10px;
-background:rgba(0,0,0,.35);
-overflow:auto;
-}
-.code pre{margin:0;font-family:var(--mono)}
+.code{margin-top:12px;background:#000;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.12);}
+.code pre{margin:0;font-family:var(--mono);font-size:13px;line-height:1.45;white-space:pre;}
 
-.video{margin-top:18px}
-.video iframe{width:100%;aspect-ratio:16/9;border:0}
+.video{margin-top:14px;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
+.video iframe{width:100%;aspect-ratio:16/9;border:0;}
 
-footer{text-align:center;margin-top:20px;color:rgba(234,240,255,.55)}
-
+footer{text-align:center;margin-top:22px;color:rgba(234,240,255,.55);}
 [data-lang]{display:none}
-.show{display:block}
+[data-lang].show{display:block}
 </style>
 </head>
 
@@ -151,7 +98,7 @@ footer{text-align:center;margin-top:20px;color:rgba(234,240,255,.55)}
 <div class="wrap">
 
 <div class="topbar">
-<div class="brand">CS2 Audio Fix</div>
+<div class="brand"><span class="dot"></span><span>CS2 Audio Fix</span></div>
 <div class="langToggle">
 <button id="btnRO" class="active">RO</button>
 <button id="btnEN">EN</button>
@@ -159,16 +106,26 @@ footer{text-align:center;margin-top:20px;color:rgba(234,240,255,.55)}
 </div>
 
 <section class="hero">
-<div id="roBlock" class="show" data-lang="ro">
-<h1>Auzi pașii prin rafale și explozii</h1>
-<p class="sub">Compresie + EQ la nivel de Windows (Equalizer APO + Peace + ReaComp). VAC Safe.</p>
+<div class="heroInner">
+<div data-lang="ro" class="show" id="roBlock">
+<h1>Auzi pașii prin rafale & explozii.</h1>
+<p class="sub">Compresie + EQ la nivel de Windows (Equalizer APO + Peace + ReaComp).</p>
+<div class="ctaRow">
 <a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
 </div>
+</div>
 
-<div id="enBlock" data-lang="en">
-<h1>Hear footsteps through gunfire</h1>
-<p class="sub">Windows compression + EQ. VAC Safe.</p>
-<a class="btn btnPrimary" href="./cs2_pasi.csv" download>Download preset CSV</a>
+<div class="card">
+<h3>Lanțul corect</h3>
+<div class="list">
+<div class="li">Preamp −7dB</div>
+<div class="li">↓</div>
+<div class="li">ReaComp (VST)</div>
+<div class="li">↓</div>
+<div class="li">Graphic EQ</div>
+</div>
+</div>
+
 </div>
 </section>
 
@@ -186,9 +143,9 @@ footer{text-align:center;margin-top:20px;color:rgba(234,240,255,.55)}
 <h3>Opțional: creează-ți propriul CSV</h3>
 
 <ul class="list">
-<li class="li"><span class="tagAction">Click dreapta</span> Desktop → <span class="tagAction">New → Text Document</span></li>
+<li class="li"><span class="tagAction">Click dreapta</span> Desktop → New → Text Document</li>
 <li class="li">Redenumește: <span class="kbd">name.csv</span></li>
-<li class="li"><span class="tagAction">Deschide</span> și lipește exact:</li>
+<li class="li">Deschide și introdu exact:</li>
 </ul>
 
 <div class="code">
@@ -209,11 +166,11 @@ footer{text-align:center;margin-top:20px;color:rgba(234,240,255,.55)}
 </div>
 
 <ul class="list">
-<li class="li"><span class="tagAction">Save</span> → Import în Peace</li>
+<li class="li"><span class="tagAction">Save</span> → apoi <span class="tagAction">Import</span> în Peace</li>
 <li class="li"><span class="tagWarn">Dacă devine</span> name.csv.txt → șterge .txt</li>
 </ul>
-</div>
 
+</div>
 </section>
 
 <section class="video">
@@ -229,18 +186,8 @@ const btnEN=document.getElementById('btnEN');
 const ro=document.getElementById('roBlock');
 const en=document.getElementById('enBlock');
 
-btnRO.onclick=()=>{
-btnRO.classList.add('active');
-btnEN.classList.remove('active');
-ro.classList.add('show');
-en.classList.remove('show');
-};
-btnEN.onclick=()=>{
-btnEN.classList.add('active');
-btnRO.classList.remove('active');
-en.classList.add('show');
-ro.classList.remove('show');
-};
+btnRO.onclick=()=>{btnRO.classList.add('active');btnEN.classList.remove('active');ro.classList.add('show');en.classList.remove('show');}
+btnEN.onclick=()=>{btnEN.classList.add('active');btnRO.classList.remove('active');en.classList.add('show');ro.classList.remove('show');}
 </script>
 
 </body>
