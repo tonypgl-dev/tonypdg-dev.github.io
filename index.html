@@ -56,14 +56,13 @@
       font-weight:800;
       letter-spacing:.3px;
     }
-    .logo{
-      height:100px;
-      width:auto;
-      object-fit:contain;
-      display:block;
+    .brand .dot{
+      width:10px;height:10px;border-radius:99px;
+      background:linear-gradient(90deg,var(--red),var(--green));
+      box-shadow: 0 0 18px rgba(61,255,117,.35);
     }
 
-    /* Toggle */
+    /* Toggle (CLICKABLE) */
     .langToggle{
       display:flex;
       align-items:center;
@@ -102,7 +101,7 @@
       overflow:hidden;
       box-shadow:var(--shadow);
       position:relative;
-      min-height: 360px;
+      min-height: 380px;
       background:
         linear-gradient(180deg, rgba(0,0,0,.55), rgba(0,0,0,.88)),
         url("./header.png");
@@ -113,12 +112,12 @@
       padding:28px;
       display:grid;
       grid-template-columns: 1.2fr .8fr;
-      gap:18px;
-      min-height: 360px;
+      gap:14px;
+      min-height: 380px;
       align-content:end;
     }
     @media (max-width: 900px){
-      .heroInner{ grid-template-columns: 1fr; min-height: 320px; }
+      .heroInner{ grid-template-columns: 1fr; min-height: 340px; }
     }
 
     .badgeRow{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
@@ -147,7 +146,7 @@
       color:rgba(234,240,255,.82);
       font-size: clamp(14px, 1.4vw, 16px);
       line-height:1.5;
-      max-width: 70ch;
+      max-width: 62ch;
     }
 
     .ctaRow{
@@ -182,8 +181,15 @@
       color:var(--green);
       box-shadow: 0 0 0 1px rgba(61,255,117,.12) inset;
     }
-    .btnPrimary:hover{ background:rgba(61,255,117,.18); }
-
+    .btnPrimary:hover{
+      background:rgba(61,255,117,.18);
+    }
+    .btnDanger{
+      background:rgba(255,59,59,.12);
+      border-color: rgba(255,59,59,.22);
+      color:#ffd7d7;
+      box-shadow: 0 0 0 1px rgba(255,59,59,.10) inset;
+    }
     .miniNote{
       margin-top:10px;
       color:rgba(234,240,255,.65);
@@ -231,8 +237,14 @@
       font-size:14px;
       line-height:1.45;
     }
-    .tagAction{ color:var(--green); font-weight:900; }
-    .tagWarn{ color:var(--red); font-weight:900; }
+    .tagAction{
+      color:var(--green);
+      font-weight:900;
+    }
+    .tagWarn{
+      color:var(--red);
+      font-weight:900;
+    }
 
     .kbd{
       font-family:var(--mono);
@@ -245,111 +257,75 @@
       display:inline-block;
     }
 
-    /* Chain arrows */
-    .chain{
-      margin-top:10px;
-      display:grid;
-      gap:10px;
-      font-family:var(--mono);
-      font-size:13px;
-    }
-    .node{
-      padding:10px 12px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.30);
-    }
-    .node .label{ color:var(--muted); font-family:var(--sans); font-weight:800; font-size:12px; }
-    .node .value{ margin-top:4px; font-weight:900; color:var(--text); }
-    .arrow{
-      display:flex; align-items:center; justify-content:center;
-      color:rgba(234,240,255,.35);
-      font-size:22px;
-      line-height:1;
-    }
-    .value.green{ color:var(--green) }
-
-    /* Code block */
-    .code{
-      margin-top:10px;
-      border:1px solid rgba(255,255,255,.10);
-      background:rgba(0,0,0,.35);
-      border-radius:14px;
-      padding:12px 12px;
-      overflow:auto;
-      box-shadow: 0 10px 24px rgba(0,0,0,.35);
-    }
-    .code pre{
-      margin:0;
-      font-family:var(--mono);
-      font-size:12.5px;
-      line-height:1.45;
-      color:rgba(234,240,255,.92);
-      white-space:pre;
-    }
-
-    /* A/B slider */
-    .abRow{
+    /* A/B Player */
+    .abTop{
       display:flex;
-      gap:12px;
       align-items:center;
-      margin-top:14px;
+      justify-content:space-between;
+      gap:10px;
       flex-wrap:wrap;
     }
-    .abPills{
-      display:flex;
+    .pill{
+      display:inline-flex;
       align-items:center;
-      gap:10px;
-      padding:8px 10px;
-      border:1px solid var(--border);
-      border-radius:14px;
-      background:rgba(0,0,0,.25);
-    }
-    .led{
-      width:10px;
-      height:10px;
+      gap:8px;
+      padding:7px 10px;
       border-radius:999px;
-      background:rgba(234,240,255,.25);
-      box-shadow: 0 0 0 1px rgba(255,255,255,.08) inset;
-    }
-    .led.on{
-      background:var(--green);
-      box-shadow: 0 0 18px rgba(61,255,117,.35);
-    }
-    .abLabel{
-      font-weight:900;
-      letter-spacing:.2px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.30);
       font-size:12.5px;
       color:rgba(234,240,255,.85);
     }
-    .sliderWrap{
-      flex:1 1 260px;
-      min-width:240px;
+    .led{
+      width:10px;height:10px;border-radius:99px;
+      background:#3a3f4a;
+      box-shadow:none;
+    }
+    .led.on{
+      background:var(--green);
+      box-shadow: 0 0 16px rgba(61,255,117,.35);
+    }
+
+    .abControls{
+      margin-top:10px;
+      display:grid;
+      gap:10px;
+    }
+    .abRow{
       display:flex;
       gap:10px;
       align-items:center;
+      flex-wrap:wrap;
     }
-    .sliderWrap span{
-      font-family:var(--mono);
-      font-size:12px;
-      color:rgba(234,240,255,.6);
-      white-space:nowrap;
-    }
-    input[type="range"]{
-      -webkit-appearance:none;
+    .abSlider{
       width:100%;
-      height:6px;
-      border-radius:999px;
-      background:rgba(255,255,255,.14);
-      outline:none;
+      accent-color: var(--green);
     }
-    input[type="range"]::-webkit-slider-thumb{
-      -webkit-appearance:none;
-      width:16px;height:16px;border-radius:999px;
-      background:linear-gradient(90deg,var(--red),var(--green));
-      border:1px solid rgba(255,255,255,.18);
-      box-shadow: 0 8px 20px rgba(0,0,0,.45);
-      cursor:pointer;
+    .progressWrap{
+      display:grid;
+      gap:6px;
+    }
+    .progressBar{
+      height:10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(0,0,0,.30);
+      overflow:hidden;
+    }
+    .progressFill{
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, rgba(255,59,59,.85), rgba(61,255,117,.85));
+    }
+    .status{
+      font-size:12.5px;
+      color:rgba(234,240,255,.70);
+    }
+    .status.error{ color:#ffb3b3; }
+    .tiny{
+      font-size:12.5px;
+      color:rgba(234,240,255,.62);
+      line-height:1.4;
     }
 
     /* Video */
@@ -386,7 +362,8 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <img src="./logo2.png" alt="CS2 Audio Fix logo" class="logo">
+        <span class="dot"></span>
+        <span>CS2 Audio Fix</span>
       </div>
 
       <div class="langToggle" role="tablist" aria-label="Language toggle">
@@ -427,273 +404,179 @@
           </div>
         </div>
 
-        <div>
+        <div style="display:grid; gap:14px;">
+          <!-- WHAT IT DOES -->
           <div class="card">
             <h3 data-lang="ro" class="show">Ce face compresia sunetului?</h3>
-            <h3 data-lang="en">What does the sound compression do?</h3>
+            <h3 data-lang="en">What does compression do?</h3>
 
-            <p data-lang="ro" class="show" class="muted">
-              Reduce diferența dintre sunetele foarte tari (arme/flash/he) și cele subtile (pași).
-              Rezultatul: poți ține volumul mai sigur și totuși auzi mai clar.
+            <p data-lang="ro" class="show">
+              Reduce diferența dintre sunetele <b>foarte tari</b> (arme/flash) și cele <b>slabe</b> (pași).
+              Rezultatul: poți ține volumul mai jos și totuși auzi pașii mai clar.
             </p>
-            <p data-lang="en" class="muted">
-              It reduces the dynamic range between very loud sounds (guns/flash) and subtle ones (footsteps).
-              Result: safer volume, clearer cues.
+            <p data-lang="en">
+              It reduces the gap between <b>very loud</b> sounds (gunshots/flash) and <b>quiet</b> sounds (footsteps).
+              Result: you can keep volume lower while footsteps stay clearer.
             </p>
 
             <ul class="list" style="margin-top:12px">
-              <li class="li" data-lang="ro" class="show"><span class="tagAction">VAC Safe</span> — nu modifică jocul.</li>
-              <li class="li" data-lang="en"><span class="tagAction">VAC Safe</span> — no game modification.</li>
+              <li class="li"><span class="tagWarn">NU</span> rula Sonar/Voicemeeter/virtual devices în paralel.</li>
+              <li class="li"><span class="tagAction">DA</span> Windows: Disable Enhancements + Exclusive Mode OFF.</li>
             </ul>
           </div>
-        </div>
 
+          <!-- A/B TEST CARD (IN HEADER) -->
+          <div class="card" id="test">
+            <div class="abTop">
+              <div>
+                <h3 data-lang="ro" class="show" style="margin:0 0 4px;">A/B Test — auzi diferența</h3>
+                <h3 data-lang="en" style="margin:0 0 4px;">A/B Test — hear the difference</h3>
+                <div class="tiny muted" data-lang="ro" class="show">Apasă <b>Preload</b> (fișiere ~4 min), apoi Play și comută sliderul.</div>
+                <div class="tiny muted" data-lang="en">Press <b>Preload</b> (files ~4 min), then Play and move the slider.</div>
+              </div>
+
+              <div class="pill" title="Status">
+                <span id="led" class="led"></span>
+                <span id="modeLabel">Original</span>
+              </div>
+            </div>
+
+            <div class="abControls">
+              <div class="abRow">
+                <button id="btnPreload" class="btn btnPrimary" type="button">Preload</button>
+                <button id="btnPlay" class="btn" type="button">Play</button>
+                <button id="btnStop" class="btn btnDanger" type="button">Stop</button>
+              </div>
+
+              <div class="progressWrap">
+                <div class="progressBar" aria-label="preload progress">
+                  <div id="progressFill" class="progressFill"></div>
+                </div>
+                <div id="status" class="status">Ready.</div>
+              </div>
+
+              <div>
+                <input id="abMix" class="abSlider" type="range" min="0" max="1" step="0.01" value="0" />
+                <div class="abRow" style="justify-content:space-between;">
+                  <span class="tiny"><b>Original</b> (stânga)</span>
+                  <span class="tiny"><b>Compressed</b> (dreapta)</span>
+                </div>
+              </div>
+
+              <!-- hidden audio elements -->
+              <audio id="audioOriginal" preload="none"></audio>
+              <audio id="audioCompressed" preload="none"></audio>
+
+              <div class="tiny muted" data-lang="ro" class="show">
+                Fișiere așteptate în root: <span class="kbd">cs2_original.mp3</span> și <span class="kbd">cs2_compressed.mp3</span>.
+              </div>
+              <div class="tiny muted" data-lang="en">
+                Expected in root: <span class="kbd">cs2_original.mp3</span> and <span class="kbd">cs2_compressed.mp3</span>.
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- FULL TUTORIAL (RO/EN) -->
+    <!-- CONTENT GRID -->
     <section class="grid" id="tutorial">
-
-      <!-- STEP 1 -->
       <div class="card">
         <h3 data-lang="ro" class="show">1) Instalează Equalizer APO</h3>
         <h3 data-lang="en">1) Install Equalizer APO</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo</a></li>
-          <li class="li" data-lang="en"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo</a></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Run as administrator</span> installer</li>
-          <li class="li" data-lang="en"><span class="tagAction">Run as administrator</span> installer</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Bifează DOAR</span> device-ul fizic (căști/boxe reale)</li>
-          <li class="li" data-lang="en"><span class="tagAction">Select ONLY</span> your real playback device (headset/speakers)</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagWarn">NU</span> HDMI / monitor / NVIDIA / virtual devices</li>
-          <li class="li" data-lang="en"><span class="tagWarn">DO NOT</span> select HDMI / monitor / NVIDIA / virtual devices</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Restart</span> PC</li>
-          <li class="li" data-lang="en"><span class="tagAction">Restart</span> your PC</li>
+          <li class="li"><span class="tagAction">Download</span> <a href="https://sourceforge.net/projects/equalizerapo/" target="_blank" rel="noopener">sourceforge.net/projects/equalizerapo</a></li>
+          <li class="li"><span class="tagAction">Run</span> installer → Run as administrator</li>
+          <li class="li"><span class="tagAction">Bifează</span> DOAR device-ul fizic real (USB Headset / Realtek Speakers)</li>
+          <li class="li"><span class="tagWarn">NU</span> HDMI / NVIDIA / virtual devices</li>
+          <li class="li"><span class="tagAction">Restart</span> PC</li>
         </ul>
       </div>
 
-      <!-- STEP 2 -->
       <div class="card">
         <h3 data-lang="ro" class="show">2) Instalează Peace</h3>
         <h3 data-lang="en">2) Install Peace</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension</a></li>
-          <li class="li" data-lang="en"><span class="tagAction">Download</span>: <a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension</a></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Alege</span> Full Interface</li>
-          <li class="li" data-lang="en"><span class="tagAction">Choose</span> Full Interface</li>
+          <li class="li"><span class="tagAction">Download</span> <a href="https://sourceforge.net/projects/peace-equalizer-apo-extension/" target="_blank" rel="noopener">sourceforge.net/projects/peace-equalizer-apo-extension</a></li>
+          <li class="li"><span class="tagAction">Alege</span> Full Interface</li>
         </ul>
       </div>
 
-      <!-- STEP 3 -->
       <div class="card">
         <h3 data-lang="ro" class="show">3) Instalează ReaPlugs (Reaper)</h3>
         <h3 data-lang="en">3) Install ReaPlugs (Reaper)</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span>: <a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs</a></li>
-          <li class="li" data-lang="en"><span class="tagAction">Download</span>: <a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs</a></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Install</span> ReaPlugs VST (64-bit) cu setări default</li>
-          <li class="li" data-lang="en"><span class="tagAction">Install</span> ReaPlugs VST (64-bit) with default settings</li>
+          <li class="li"><span class="tagAction">Download</span> <a href="https://www.reaper.fm/reaplugs/" target="_blank" rel="noopener">reaper.fm/reaplugs</a></li>
+          <li class="li"><span class="tagAction">Instalează</span> ReaPlugs VST (64-bit) cu setări default</li>
         </ul>
       </div>
 
-      <!-- STEP 4 -->
       <div class="card">
         <h3 data-lang="ro" class="show">4) Creează lanțul în Peace (IMPORTANT)</h3>
         <h3 data-lang="en">4) Build the chain in Peace (IMPORTANT)</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Peace</span> → Commands → <span class="kbd">Use Editor (VST)</span></li>
-          <li class="li" data-lang="en"><span class="tagAction">Peace</span> → Commands → <span class="kbd">Use Editor (VST)</span></li>
-
-          <li class="li" data-lang="ro" class="show">Tab: <span class="kbd">Before Peace EQ</span></li>
-          <li class="li" data-lang="en">Tab: <span class="kbd">Before Peace EQ</span></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Add</span> → Basic Filters → <span class="kbd">Preamp</span> = <span class="kbd">−7.00 dB</span></li>
-          <li class="li" data-lang="en"><span class="tagAction">Add</span> → Basic Filters → <span class="kbd">Preamp</span> = <span class="kbd">−7.00 dB</span></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Add</span> → Plugins → VST plugin → <span class="kbd">reacomp-standalone.dll</span></li>
-          <li class="li" data-lang="en"><span class="tagAction">Add</span> → Plugins → VST plugin → <span class="kbd">reacomp-standalone.dll</span></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">După compresor</span> vine EQ (Graphic EQ / Peace)</li>
-          <li class="li" data-lang="en"><span class="tagAction">After compression</span> comes EQ (Graphic EQ / Peace)</li>
+          <li class="li"><span class="tagAction">Peace</span> → Commands → Use Editor (VST)</li>
+          <li class="li"><span class="tagAction">Tab</span> Before Peace EQ</li>
+          <li class="li"><span class="tagAction">Add</span> Basic Filters → Preamp (−7.00 dB)</li>
+          <li class="li"><span class="tagAction">Add</span> Plugins → VST plugin → <span class="kbd">reacomp-standalone.dll</span></li>
+          <li class="li"><span class="tagAction">După compresor</span> vine EQ (Graphic EQ / Peace)</li>
         </ul>
       </div>
 
-      <!-- STEP 5 -->
       <div class="card">
-        <h3 data-lang="ro" class="show">5) Preset EQ</h3>
-        <h3 data-lang="en">5) EQ preset</h3>
+        <h3 data-lang="ro" class="show">5) Preset EQ (CSV)</h3>
+        <h3 data-lang="en">5) EQ preset (CSV)</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Download</span> preset: <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
-          <li class="li" data-lang="en"><span class="tagAction">Download</span> preset: <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Import</span> în Peace (Import / Load preset)</li>
-          <li class="li" data-lang="en"><span class="tagAction">Import</span> in Peace (Import / Load preset)</li>
+          <li class="li"><span class="tagAction">Download</span> preset: <a href="./cs2_pasi.csv" download>cs2_pasi.csv</a></li>
+          <li class="li"><span class="tagAction">Import</span> în Peace (Import / Load preset)</li>
         </ul>
 
-        <p class="miniNote muted" data-lang="ro" class="show">Opțional: dacă vrei să-ți faci singur CSV-ul, fă asta:</p>
-        <p class="miniNote muted" data-lang="en">Optional: if you want to create your own CSV, do this:</p>
+        <div style="height:10px"></div>
+
+        <h3 style="margin-top:8px" data-lang="ro" class="show">Opțional: creează-ți propriul CSV</h3>
+        <h3 style="margin-top:8px" data-lang="en">Optional: create your own CSV</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Click dreapta</span> Desktop → New → Text Document</li>
-          <li class="li" data-lang="en"><span class="tagAction">Right click</span> Desktop → New → Text Document</li>
-
-          <li class="li" data-lang="ro" class="show">Redenumește: <span class="kbd">name.csv</span> (nu .txt)</li>
-          <li class="li" data-lang="en">Rename to: <span class="kbd">name.csv</span> (not .txt)</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Lipește</span> exact:</li>
-          <li class="li" data-lang="en"><span class="tagAction">Paste</span> exactly:</li>
-        </ul>
-
-        <div class="code">
-<pre>Frequency(Hz),Gain(dB)
-31,-2
-62,-2
-125,-2
-250,-1
-500,-0.5
-1000,0
-2000,2
-3000,2.5
-4000,3
-6000,2
-8000,1
-12000,0.5
-16000,0</pre>
-        </div>
-
-        <ul class="list" style="margin-top:10px">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Save</span> → Import în Peace</li>
-          <li class="li" data-lang="en"><span class="tagAction">Save</span> → Import in Peace</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagWarn">Dacă devine</span> <span class="kbd">name.csv.txt</span> → șterge <span class="kbd">.txt</span> (activează File name extensions)</li>
-          <li class="li" data-lang="en"><span class="tagWarn">If it becomes</span> <span class="kbd">name.csv.txt</span> → remove <span class="kbd">.txt</span> (enable File name extensions)</li>
+          <li class="li"><span class="tagAction">Click dreapta</span> Desktop → New → Text Document</li>
+          <li class="li"><span class="tagAction">Redenumește</span> în <span class="kbd">name.csv</span> (nu .txt)</li>
+          <li class="li"><span class="tagAction">Lipește</span> exact conținutul și Save</li>
+          <li class="li"><span class="tagAction">Import</span> în Peace</li>
+          <li class="li"><span class="tagWarn">Dacă devine</span> <span class="kbd">name.csv.txt</span>, șterge <span class="kbd">.txt</span> (View → File name extensions)</li>
         </ul>
       </div>
 
-      <!-- CHAIN CARD -->
-      <div class="card">
-        <h3 data-lang="ro" class="show">Lanțul corect în Equalizer APO</h3>
-        <h3 data-lang="en">Correct chain in Equalizer APO</h3>
-
-        <p class="muted" data-lang="ro" class="show">Ordinea contează. Așa e gândit presetul:</p>
-        <p class="muted" data-lang="en">Order matters. This is how the preset is designed:</p>
-
-        <div class="chain" aria-label="Processing chain">
-          <div class="node">
-            <div class="label">1) Gain</div>
-            <div class="value green">Preamp (−7 dB)</div>
-          </div>
-          <div class="arrow">↓</div>
-          <div class="node">
-            <div class="label">2) Compression</div>
-            <div class="value">ReaComp (VST)</div>
-          </div>
-          <div class="arrow">↓</div>
-          <div class="node">
-            <div class="label">3) EQ</div>
-            <div class="value">Graphic EQ</div>
-          </div>
-        </div>
-
-        <ul class="list" style="margin-top:12px">
-          <li class="li" data-lang="ro" class="show"><span class="tagWarn">NU</span> rula Sonar/Voicemeeter/virtual devices în paralel.</li>
-          <li class="li" data-lang="en"><span class="tagWarn">DO NOT</span> run Sonar/Voicemeeter/virtual devices in parallel.</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">DA</span> setări Windows: Disable Enhancements + Exclusive Mode OFF.</li>
-          <li class="li" data-lang="en"><span class="tagAction">YES</span> Windows settings: Disable Enhancements + Exclusive Mode OFF.</li>
-        </ul>
-      </div>
-
-      <!-- WINDOWS -->
       <div class="card">
         <h3 data-lang="ro" class="show">6) Windows Settings</h3>
-        <h3 data-lang="en">6) Windows settings</h3>
+        <h3 data-lang="en">6) Windows Settings</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Sounds</span> → Playback → device → Properties</li>
-          <li class="li" data-lang="en"><span class="tagAction">Sounds</span> → Playback → device → Properties</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Enhancements</span> → Disable all enhancements</li>
-          <li class="li" data-lang="en"><span class="tagAction">Enhancements</span> → Disable all enhancements</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Advanced</span> → 2 channel, 48kHz</li>
-          <li class="li" data-lang="en"><span class="tagAction">Advanced</span> → 2 channel, 48kHz</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Debifează</span> Exclusive Mode (ambele)</li>
-          <li class="li" data-lang="en"><span class="tagAction">Disable</span> Exclusive Mode (both)</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Communications</span> → Do nothing</li>
-          <li class="li" data-lang="en"><span class="tagAction">Communications</span> → Do nothing</li>
+          <li class="li"><span class="tagAction">Sounds</span> → Playback → device → Properties</li>
+          <li class="li"><span class="tagAction">Enhancements</span> → Disable all enhancements</li>
+          <li class="li"><span class="tagAction">Advanced</span> → 48kHz, Exclusive Mode OFF</li>
+          <li class="li"><span class="tagAction">Communications</span> → Do nothing</li>
         </ul>
       </div>
 
-      <!-- CS2 -->
       <div class="card">
         <h3 data-lang="ro" class="show">7) CS2 Settings</h3>
-        <h3 data-lang="en">7) CS2 settings</h3>
+        <h3 data-lang="en">7) CS2 Settings</h3>
 
         <ul class="list">
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Output Device</span> → alege căștile tale (nu Default)</li>
-          <li class="li" data-lang="en"><span class="tagAction">Output Device</span> → pick your headset (not Default)</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">EQ Profile</span> → Crisp</li>
-          <li class="li" data-lang="en"><span class="tagAction">EQ Profile</span> → Crisp</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">L/R Isolation</span> → 0%</li>
-          <li class="li" data-lang="en"><span class="tagAction">L/R Isolation</span> → 0%</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Perspective Correction</span> → OFF</li>
-          <li class="li" data-lang="en"><span class="tagAction">Perspective Correction</span> → OFF</li>
-
-          <li class="li" data-lang="ro" class="show"><span class="tagAction">Restart</span> joc</li>
-          <li class="li" data-lang="en"><span class="tagAction">Restart</span> the game</li>
+          <li class="li"><span class="tagAction">Output Device</span> → alege căștile (nu Default)</li>
+          <li class="li"><span class="tagAction">EQ profile</span> → Crisp</li>
+          <li class="li"><span class="tagAction">L/R Isolation</span> → 0%</li>
+          <li class="li"><span class="tagAction">Perspective Correction</span> → OFF</li>
+          <li class="li"><span class="tagAction">Restart</span> joc</li>
         </ul>
       </div>
-
     </section>
 
-    <!-- TEST (A/B) + YOUTUBE -->
-    <section class="card" id="test" style="margin-top:18px;">
-      <h3 data-lang="ro" class="show">🎧 A/B Test — Ascultă diferența</h3>
-      <h3 data-lang="en">🎧 A/B Test — Hear the difference</h3>
-
-      <p class="muted" data-lang="ro" class="show">Apasă Play și mișcă sliderul între Original și Compressed. LED-ul se aprinde pe verde când ești mai mult pe compresie.</p>
-      <p class="muted" data-lang="en">Press Play and move the slider between Original and Compressed. The LED turns green when you're leaning into compression.</p>
-
-      <div class="abRow">
-        <button class="btn btnPrimary" id="playDemo" type="button">Play</button>
-
-        <div class="abPills" aria-label="A/B status">
-          <span class="led" id="abLed" aria-hidden="true"></span>
-          <span class="abLabel" id="abModeLabel">Original</span>
-        </div>
-
-        <div class="sliderWrap" aria-label="A/B slider">
-          <span>Original</span>
-          <input id="abSlider" type="range" min="0" max="100" value="0" />
-          <span>Compressed</span>
-        </div>
-
-        <span class="miniNote muted" data-lang="ro" class="show">Folosește căști. Ține volumul constant.</span>
-        <span class="miniNote muted" data-lang="en">Use headphones. Keep volume constant.</span>
-      </div>
-
-      <!-- Your files in repo root -->
-      <audio id="audioOriginal" src="./cs2_original.mp3" preload="auto"></audio>
-      <audio id="audioCompressed" src="./cs2_compressed.mp3" preload="auto"></audio>
-    </section>
-
+    <!-- VIDEO -->
     <section class="video" aria-label="YouTube test">
       <iframe src="https://www.youtube.com/embed/UHwiME-LhSE?rel=0"
               title="CS2 Audio Fix — Test APO ON/OFF"
@@ -705,106 +588,230 @@
   </div>
 
   <script>
-    // --- Language toggle ---
+    // ---------- Language toggle ----------
     const btnRO = document.getElementById('btnRO');
     const btnEN = document.getElementById('btnEN');
 
-    function setLang(lang){
-      document.querySelectorAll('[data-lang]').forEach(n => n.classList.remove('show'));
+    const allLangBlocks = Array.from(document.querySelectorAll('[data-lang]'));
 
+    function setLang(lang){
       if(lang === 'ro'){
         btnRO.classList.add('active');
         btnEN.classList.remove('active');
         document.documentElement.lang = 'ro';
-        document.querySelectorAll('[data-lang="ro"]').forEach(n => n.classList.add('show'));
       } else {
         btnEN.classList.add('active');
         btnRO.classList.remove('active');
         document.documentElement.lang = 'en';
-        document.querySelectorAll('[data-lang="en"]').forEach(n => n.classList.add('show'));
       }
-      // keep A/B label in sync with language
-      applyMix();
+      allLangBlocks.forEach(el => {
+        const isMatch = el.getAttribute('data-lang') === lang;
+        el.classList.toggle('show', isMatch);
+      });
     }
 
     btnRO.addEventListener('click', () => setLang('ro'));
     btnEN.addEventListener('click', () => setLang('en'));
+
+    // Ensure initial language render
     setLang('ro');
 
-    // --- A/B AUDIO DEMO (slider crossfade) ---
-    const playBtn = document.getElementById('playDemo');
-    const abSlider = document.getElementById('abSlider');
-    const abLed = document.getElementById('abLed');
-    const abModeLabel = document.getElementById('abModeLabel');
+    // ---------- A/B Audio Test ----------
+    const FILE_ORIG = './cs2_original.mp3';
+    const FILE_COMP = './cs2_compressed.mp3';
 
     const audioOrig = document.getElementById('audioOriginal');
     const audioComp = document.getElementById('audioCompressed');
 
-    let playing = false;
+    const btnPreload = document.getElementById('btnPreload');
+    const btnPlay = document.getElementById('btnPlay');
+    const btnStop = document.getElementById('btnStop');
 
-    function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+    const mix = document.getElementById('abMix');
+    const statusEl = document.getElementById('status');
+    const progressFill = document.getElementById('progressFill');
+    const led = document.getElementById('led');
+    const modeLabel = document.getElementById('modeLabel');
 
-    function applyMix(){
-      if(!abSlider) return;
-      const t = clamp01(parseInt(abSlider.value,10) / 100);
-      audioOrig.volume = 1 - t;
-      audioComp.volume = t;
+    let isPlaying = false;
+    let preloaded = false;
+    let origURL = null;
+    let compURL = null;
 
-      if(t > 0.5){
-        abLed.classList.add('on');
-      } else {
-        abLed.classList.remove('on');
+    function clamp01(x){ return Math.min(1, Math.max(0, x)); }
+
+    function setStatus(msg, isError=false){
+      statusEl.textContent = msg;
+      statusEl.classList.toggle('error', !!isError);
+    }
+
+    function updateLED(){
+      const v = clamp01(parseFloat(mix.value || "0"));
+      // "on" when leaning to compressed side
+      const compressedOn = v >= 0.5;
+      led.classList.toggle('on', compressedOn);
+      modeLabel.textContent = compressedOn ? 'Compressed' : 'Original';
+    }
+
+    function updateMix(){
+      const v = clamp01(parseFloat(mix.value || "0"));
+      audioOrig.volume = 1 - v;
+      audioComp.volume = v;
+      audioOrig.muted = false;
+      audioComp.muted = false;
+      updateLED();
+    }
+
+    mix.addEventListener('input', updateMix);
+
+    function syncTimes(fromA, toB){
+      // keep them aligned for instant A/B
+      try { toB.currentTime = fromA.currentTime; } catch(e){}
+    }
+
+    function resetAudio(){
+      try { audioOrig.pause(); } catch(e){}
+      try { audioComp.pause(); } catch(e){}
+      audioOrig.currentTime = 0;
+      audioComp.currentTime = 0;
+      isPlaying = false;
+      btnPlay.textContent = 'Play';
+    }
+
+    // If one ends, stop both
+    audioOrig.addEventListener('ended', resetAudio);
+    audioComp.addEventListener('ended', resetAudio);
+
+    // Keep times in sync during playback
+    audioOrig.addEventListener('timeupdate', () => { if(isPlaying) syncTimes(audioOrig, audioComp); });
+    audioComp.addEventListener('timeupdate', () => { if(isPlaying) syncTimes(audioComp, audioOrig); });
+
+    updateMix();
+    updateLED();
+    setStatus('Ready.');
+
+    async function fetchWithProgress(url, onProgress){
+      const res = await fetch(url, { cache: 'force-cache' });
+      if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+      const contentLength = res.headers.get('content-length');
+      const total = contentLength ? parseInt(contentLength, 10) : null;
+
+      // If streaming not supported, fallback
+      if(!res.body || !window.ReadableStream){
+        const blob = await res.blob();
+        onProgress(1, 1);
+        return blob;
       }
 
-      const lang = document.documentElement.lang || 'ro';
-      if(t < 0.5){
-        abModeLabel.textContent = (lang === 'ro') ? 'Original' : 'Original';
-      } else {
-        abModeLabel.textContent = (lang === 'ro') ? 'Compresie' : 'Compressed';
+      const reader = res.body.getReader();
+      const chunks = [];
+      let received = 0;
+
+      while(true){
+        const { done, value } = await reader.read();
+        if(done) break;
+        chunks.push(value);
+        received += value.length;
+        if(total) onProgress(received, total);
       }
+
+      const blob = new Blob(chunks);
+      onProgress(1, 1);
+      return blob;
     }
 
-    function syncTimes(){
-      const t = Math.min(audioOrig.currentTime || 0, audioComp.currentTime || 0);
-      audioOrig.currentTime = t;
-      audioComp.currentTime = t;
+    function setProgress(p){
+      const pct = Math.round(clamp01(p) * 100);
+      progressFill.style.width = pct + '%';
     }
 
-    function stopAll(){
-      audioOrig.pause();
-      audioComp.pause();
-      playing = false;
-      playBtn.textContent = 'Play';
-    }
-    audioOrig.addEventListener('ended', stopAll);
-    audioComp.addEventListener('ended', stopAll);
+    async function preloadAll(){
+      setStatus('Preloading…');
+      setProgress(0);
 
-    playBtn.addEventListener('click', async () => {
+      // Revoke old blob URLs if any
+      if(origURL) URL.revokeObjectURL(origURL);
+      if(compURL) URL.revokeObjectURL(compURL);
+      origURL = null;
+      compURL = null;
+      preloaded = false;
+
       try{
-        if(!playing){
-          syncTimes();
-          applyMix();
-          await audioOrig.play();
-          await audioComp.play();
-          playing = true;
-          playBtn.textContent = 'Pause';
+        // Preload original
+        setStatus('Downloading ORIGINAL…');
+        const origBlob = await fetchWithProgress(FILE_ORIG, (rec, total) => {
+          if(total) setProgress((rec / total) * 0.5);
+        });
+
+        // Preload compressed
+        setStatus('Downloading COMPRESSED…');
+        const compBlob = await fetchWithProgress(FILE_COMP, (rec, total) => {
+          if(total) setProgress(0.5 + (rec / total) * 0.5);
+        });
+
+        origURL = URL.createObjectURL(origBlob);
+        compURL = URL.createObjectURL(compBlob);
+
+        audioOrig.src = origURL;
+        audioComp.src = compURL;
+
+        // Force load into audio pipeline
+        audioOrig.load();
+        audioComp.load();
+
+        // Default volumes
+        mix.value = "0";
+        updateMix();
+
+        preloaded = true;
+        setProgress(1);
+        setStatus('Preloaded. Press Play.');
+      } catch(err){
+        console.error(err);
+        setProgress(0);
+        setStatus(`Preload failed: ${err.message}. Check file names in root.`, true);
+      }
+    }
+
+    btnPreload.addEventListener('click', preloadAll);
+
+    btnPlay.addEventListener('click', async () => {
+      try{
+        // If user didn't preload, try minimal auto-load
+        if(!preloaded){
+          setStatus('Tip: press Preload first (recommended). Trying quick load…');
+          // quick set src direct (may still work)
+          audioOrig.src = FILE_ORIG;
+          audioComp.src = FILE_COMP;
+          audioOrig.load();
+          audioComp.load();
+          preloaded = true;
+        }
+
+        if(!isPlaying){
+          // Start both and keep aligned
+          syncTimes(audioOrig, audioComp);
+          await Promise.allSettled([audioOrig.play(), audioComp.play()]);
+          isPlaying = true;
+          btnPlay.textContent = 'Pause';
+          setStatus('Playing. Move the slider to A/B.');
         } else {
           audioOrig.pause();
           audioComp.pause();
-          playing = false;
-          playBtn.textContent = 'Play';
+          isPlaying = false;
+          btnPlay.textContent = 'Play';
+          setStatus('Paused.');
         }
-      } catch(e){
-        console.warn('Audio play error:', e);
+      } catch(err){
+        console.error(err);
+        setStatus(`Play failed: ${err.message}`, true);
       }
     });
 
-    abSlider.addEventListener('input', applyMix);
-
-    audioOrig.addEventListener('seeked', () => { if(playing) audioComp.currentTime = audioOrig.currentTime; });
-    audioComp.addEventListener('seeked', () => { if(playing) audioOrig.currentTime = audioComp.currentTime; });
-
-    applyMix();
+    btnStop.addEventListener('click', () => {
+      resetAudio();
+      setStatus('Stopped.');
+    });
   </script>
 </body>
 </html>
