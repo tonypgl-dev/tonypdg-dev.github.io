@@ -464,8 +464,7 @@
               </div>
 
               <!-- hidden audio elements -->
-<audio id="audioOriginal" src="./cs2_original.m4a" preload="metadata"></audio>
-<audio id="audioCompressed" src="./cs2_compressed.m4a" preload="metadata"></audio>
+
 
               
             </div>
@@ -609,14 +608,9 @@
     btnEN.addEventListener('click', () => setLang('en'));
 
     // Ensure initial language render
-    setLang('ro');
-
-    // ---------- A/B Audio Test ----------
-    const FILE_ORIG = './cs2_original.mp3';
-    const FILE_COMP = './cs2_compressed.mp3';
-
-    const audioOrig = document.getElementById('audioOriginal');
-    const audioComp = document.getElementById('audioCompressed');
+    setLang('ro');    // ---------- A/B Audio Test (Web Audio, OGG, no glitch) ----------
+    const FILE_ORIG = './cs2_original.ogg';
+    const FILE_COMP = './cs2_compressed.ogg';
 
     const btnPreload = document.getElementById('btnPreload');
     const btnPlay = document.getElementById('btnPlay');
@@ -628,10 +622,19 @@
     const led = document.getElementById('led');
     const modeLabel = document.getElementById('modeLabel');
 
+    let ctx = null;
+    let bufOrig = null;
+    let bufComp = null;
+
+    let srcOrig = null;
+    let srcComp = null;
+
+    let gainOrig = null;
+    let gainComp = null;
+
     let isPlaying = false;
-    let preloaded = false;
-    let origURL = null;
-    let compURL = null;
+    let startTime = 0;
+    let pausedAt = 0;
 
     function clamp01(x){ return Math.min(1, Math.max(0, x)); }
 
@@ -640,62 +643,50 @@
       statusEl.classList.toggle('error', !!isError);
     }
 
+    function setProgress(p){
+      const pct = Math.round(clamp01(p) * 100);
+      progressFill.style.width = pct + '%';
+    }
+
     function updateLED(){
       const v = clamp01(parseFloat(mix.value || "0"));
-      // "on" when leaning to compressed side
       const compressedOn = v >= 0.5;
       led.classList.toggle('on', compressedOn);
       modeLabel.textContent = compressedOn ? 'Compressed' : 'Original';
     }
 
-    function updateMix(){
+    function setMix(){
       const v = clamp01(parseFloat(mix.value || "0"));
-      audioOrig.volume = 1 - v;
-      audioComp.volume = v;
-      audioOrig.muted = false;
-      audioComp.muted = false;
+      if(gainOrig && gainComp){
+        gainOrig.gain.value = 1 - v;
+        gainComp.gain.value = v;
+      }
       updateLED();
     }
+    mix.addEventListener('input', setMix);
 
-    mix.addEventListener('input', updateMix);
-
-    function syncTimes(fromA, toB){
-      // keep them aligned for instant A/B
-      try { toB.currentTime = fromA.currentTime; } catch(e){}
+    async function ensureCtx(){
+      if(!ctx){
+        ctx = new (window.AudioContext || window.webkitAudioContext)();
+        gainOrig = ctx.createGain();
+        gainComp = ctx.createGain();
+        gainOrig.connect(ctx.destination);
+        gainComp.connect(ctx.destination);
+      }
+      if(ctx.state !== "running") await ctx.resume();
     }
 
-    function resetAudio(){
-      try { audioOrig.pause(); } catch(e){}
-      try { audioComp.pause(); } catch(e){}
-      audioOrig.currentTime = 0;
-      audioComp.currentTime = 0;
-      isPlaying = false;
-      btnPlay.textContent = 'Play';
-    }
-
-    // If one ends, stop both
-    audioOrig.addEventListener('ended', resetAudio);
-    audioComp.addEventListener('ended', resetAudio);
-
-    // Keep times in sync during playback
-    audioOrig.addEventListener('timeupdate', () => { if(isPlaying) syncTimes(audioOrig, audioComp); });
-    audioComp.addEventListener('timeupdate', () => { if(isPlaying) syncTimes(audioComp, audioOrig); });
-
-    updateMix();
-    updateLED();
-    setStatus('Ready.');
-
-    async function fetchWithProgress(url, onProgress){
-      const res = await fetch(url, { cache: 'force-cache' });
+    async function fetchArrayBuffer(url, onProgress){
+      const res = await fetch(url, { cache: 'no-cache' });
       if(!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+
       const contentLength = res.headers.get('content-length');
       const total = contentLength ? parseInt(contentLength, 10) : null;
 
-      // If streaming not supported, fallback
-      if(!res.body || !window.ReadableStream){
-        const blob = await res.blob();
+      if(!res.body){
+        const ab = await res.arrayBuffer();
         onProgress(1, 1);
-        return blob;
+        return ab;
       }
 
       const reader = res.body.getReader();
@@ -710,89 +701,121 @@
         if(total) onProgress(received, total);
       }
 
-      const blob = new Blob(chunks);
       onProgress(1, 1);
-      return blob;
+
+      let size = 0;
+      for(const c of chunks) size += c.length;
+
+      const out = new Uint8Array(size);
+      let off = 0;
+      for(const c of chunks){
+        out.set(c, off);
+        off += c.length;
+      }
+      return out.buffer;
     }
 
-    function setProgress(p){
-      const pct = Math.round(clamp01(p) * 100);
-      progressFill.style.width = pct + '%';
+    function stopSources(){
+      try { if(srcOrig) srcOrig.stop(); } catch(e){}
+      try { if(srcComp) srcComp.stop(); } catch(e){}
+      srcOrig = null;
+      srcComp = null;
+    }
+
+    function resetState(){
+      stopSources();
+      isPlaying = false;
+      pausedAt = 0;
+      btnPlay.textContent = 'Play';
+      mix.value = "0";
+      setMix();
     }
 
     async function preloadAll(){
-      setStatus('Preloading…');
-      setProgress(0);
-
-      // Revoke old blob URLs if any
-      if(origURL) URL.revokeObjectURL(origURL);
-      if(compURL) URL.revokeObjectURL(compURL);
-      origURL = null;
-      compURL = null;
-      preloaded = false;
-
       try{
-        // Preload original
+        setStatus('Starting preload…');
+        setProgress(0);
+        resetState();
+
+        await ensureCtx();
+
         setStatus('Downloading ORIGINAL…');
-        const origBlob = await fetchWithProgress(FILE_ORIG, (rec, total) => {
-          if(total) setProgress((rec / total) * 0.5);
+        const ab1 = await fetchArrayBuffer(FILE_ORIG, (rec, total) => {
+          if(total) setProgress((rec/total) * 0.5);
         });
 
-        // Preload compressed
+        setStatus('Decoding ORIGINAL…');
+        bufOrig = await ctx.decodeAudioData(ab1.slice(0));
+
         setStatus('Downloading COMPRESSED…');
-        const compBlob = await fetchWithProgress(FILE_COMP, (rec, total) => {
-          if(total) setProgress(0.5 + (rec / total) * 0.5);
+        const ab2 = await fetchArrayBuffer(FILE_COMP, (rec, total) => {
+          if(total) setProgress(0.5 + (rec/total) * 0.5);
         });
 
-        origURL = URL.createObjectURL(origBlob);
-        compURL = URL.createObjectURL(compBlob);
+        setStatus('Decoding COMPRESSED…');
+        bufComp = await ctx.decodeAudioData(ab2.slice(0));
 
-        audioOrig.src = origURL;
-        audioComp.src = compURL;
-
-        // Force load into audio pipeline
-        audioOrig.load();
-        audioComp.load();
-
-        // Default volumes
-        mix.value = "0";
-        updateMix();
-
-        preloaded = true;
         setProgress(1);
         setStatus('Preloaded. Press Play.');
       } catch(err){
         console.error(err);
         setProgress(0);
-        setStatus(`Preload failed: ${err.message}. Check file names in root.`, true);
+        setStatus(`Preload failed: ${err.message}`, true);
       }
     }
 
-    btnPreload.addEventListener('click', preloadAll);
+    function startBoth(offsetSec){
+      stopSources();
 
-    btnPlay.addEventListener('click', async () => {
+      srcOrig = ctx.createBufferSource();
+      srcComp = ctx.createBufferSource();
+      srcOrig.buffer = bufOrig;
+      srcComp.buffer = bufComp;
+
+      srcOrig.connect(gainOrig);
+      srcComp.connect(gainComp);
+
+      startTime = ctx.currentTime - offsetSec;
+      const when = ctx.currentTime + 0.02;
+
+      const dur = Math.min(bufOrig.duration, bufComp.duration);
+      const safeOffset = Math.min(Math.max(0, offsetSec), Math.max(0, dur - 0.05));
+
+      srcOrig.start(when, safeOffset);
+      srcComp.start(when, safeOffset);
+
+      srcOrig.stop(when + (dur - safeOffset));
+      srcComp.stop(when + (dur - safeOffset));
+
+      srcOrig.onended = () => {
+        if(isPlaying){
+          isPlaying = false;
+          btnPlay.textContent = 'Play';
+          setStatus('Finished.');
+          pausedAt = 0;
+        }
+      };
+    }
+
+    async function playPause(){
       try{
-        // If user didn't preload, try minimal auto-load
-        if(!preloaded){
-          setStatus('Tip: press Preload first (recommended). Trying quick load…');
-          // quick set src direct (may still work)
-          audioOrig.src = FILE_ORIG;
-          audioComp.src = FILE_COMP;
-          audioOrig.load();
-          audioComp.load();
-          preloaded = true;
+        await ensureCtx();
+
+        if(!bufOrig || !bufComp){
+          setStatus('Press Preload first.');
+          return;
         }
 
         if(!isPlaying){
-          // Start both and keep aligned
-          syncTimes(audioOrig, audioComp);
-          await Promise.allSettled([audioOrig.play(), audioComp.play()]);
+          startBoth(pausedAt);
+          setMix();
           isPlaying = true;
           btnPlay.textContent = 'Pause';
           setStatus('Playing. Move the slider to A/B.');
         } else {
-          audioOrig.pause();
-          audioComp.pause();
+          const nowPos = ctx.currentTime - startTime;
+          pausedAt = Math.max(0, nowPos);
+          stopSources();
           isPlaying = false;
           btnPlay.textContent = 'Play';
           setStatus('Paused.');
@@ -801,12 +824,25 @@
         console.error(err);
         setStatus(`Play failed: ${err.message}`, true);
       }
-    });
+    }
 
-    btnStop.addEventListener('click', () => {
-      resetAudio();
+    function stopAll(){
+      stopSources();
+      isPlaying = false;
+      pausedAt = 0;
+      btnPlay.textContent = 'Play';
       setStatus('Stopped.');
-    });
+    }
+
+    // init
+    setMix();
+    updateLED();
+    setStatus('Ready.');
+
+    btnPreload.addEventListener('click', preloadAll);
+    btnPlay.addEventListener('click', playPause);
+    btnStop.addEventListener('click', stopAll);
+
   </script>
 </body>
 </html>
